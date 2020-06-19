@@ -5,13 +5,13 @@ using System.Text;
 namespace ApiLibrary.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class MaxPaginationAttribute : Attribute
+    class AcceptRangesAttribute : Attribute
     {
-        public int Max { get; private set; }
+        public int AcceptRange { get; private set; }
 
-        public MaxPaginationAttribute(int max)
+        public AcceptRangesAttribute(int value)
         {
-            Max = max;
+            AcceptRange = value;
         }
     }
 }
