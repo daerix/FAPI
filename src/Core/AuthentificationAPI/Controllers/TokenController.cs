@@ -20,36 +20,34 @@ namespace AuthentificationAPI.Controllers
     [ApiController]
     public class TokenController : BaseController<User, int, UserDbContext>
     {
-        public override int AcceptRange { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
        public TokenController(UserDbContext context ) : base(context)
         {
-
-        }
-
-        public override Task<ActionResult<User>> GetItemByIdAsync([FromRoute] int id)
-        {
-            return base.GetItemByIdAsync(id);
-        }
-
-        public override Task<ActionResult<IEnumerable<User>>> GetItemsAsync([FromQuery] QueryParams param)
-        {
-            return base.GetItemsAsync(param);
-        }
-
-        public override Task<ActionResult> PostProduct([FromBody] User item)
-        {
-            return base.PostProduct(item);
-        }
-
-        public override Task<ActionResult> PutProduct([FromBody] User item, [FromRoute] int id)
-        {
-            return base.PutProduct(item, id);
         }
 
         public override Task<ActionResult> DeleteItemAsync([FromRoute] int id)
         {
             return base.DeleteItemAsync(id);
+        }
+
+        public override Task<ActionResult> GetItemByIdAsync([FromRoute] object id)
+        {
+            return base.GetItemByIdAsync(id);
+        }
+
+        public override Task<ActionResult> GetItemsAsync([FromQuery] Dictionary<string, string> param)
+        {
+            return base.GetItemsAsync(param);
+        }
+
+        public override Task<ActionResult> PostItemAsync([FromBody] User item)
+        {
+            return base.PostItemAsync(item);
+        }
+
+        public override Task<ActionResult> PutItemAsync([FromBody] User item, [FromRoute] int id)
+        {
+            return base.PutItemAsync(item, id);
         }
     }
 }

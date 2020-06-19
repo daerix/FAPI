@@ -1,4 +1,4 @@
-﻿using ApiLibrary.Core.Entity;
+﻿using ApiLibrary.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

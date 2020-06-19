@@ -1,4 +1,4 @@
-﻿using ApiLibrary.Core.Entity;
+﻿using ApiLibrary.Core.Entities;
 using AuthentificationAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
