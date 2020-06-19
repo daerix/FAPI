@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ApiLibrary.Core.Entity
+namespace ApiLibrary.Core.Entities
 {
     public class BaseModel<T> : BaseEntity
     {
         [NoModified]
-        public T ID { get; set; }
+        public T Id { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiLibrary.Core.Entity
+namespace ApiLibrary.Core.Entities
 {
     public abstract class BaseEntity
     {
