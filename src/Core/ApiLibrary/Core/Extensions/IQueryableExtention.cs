@@ -35,7 +35,7 @@ namespace ApiLibrary.Core.Extentions
                 {
                     query = query.SortDesc(lambda);
                 }
-                else 
+                else
                 {
                     query = query.SortAsc(lambda);
                 }
@@ -53,24 +53,28 @@ namespace ApiLibrary.Core.Extentions
 
         public static IQueryable<T> Search<T>(this IQueryable<T> query, string field, string value)
         {
-            Expression expression;
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.Property(parameter, field);
-            var obj = TypeDescriptor.GetConverter(property.Type).ConvertFromString(value.Replace("*",""));
-            var constante = Expression.Constant(obj, property.Type);
-            //var propToString = Expression.Call(property, typeof(object).GetMethod("ToString"));
-            //propToString = Expression.Call(propToString, typeof(string).GetMethod("ToLower"));
+            var constante = property.Constant(value.Replace("*", ""));
+
+            Expression expression = property;
+            if (property.Type != typeof(string))
+            {
+                expression = expression.ToStringExpression();
+                constante = constante.ToStringExpression();
+            }
+
             if (value.StartsWith("*") && value.EndsWith("*"))
             {
-                expression = Expression.Call(property, typeof(string).GetMethod("Contains"), constante);
+                expression = expression.Contains(constante);
             }
             else if (value.StartsWith("*"))
             {
-                expression = Expression.Call(property, property.Type.GetMethod("EndsWith"), constante);
+                expression = expression.EndsWith(constante);
             }
             else
             {
-                expression = Expression.Call(property, typeof(string).GetMethod("StartsWith", BindingFlags.IgnoreCase), constante);
+                expression = expression.StartsWith(constante);
             }
             var lambda = Expression.Lambda<Func<T, bool>>(expression, parameter);
             return query.Where(lambda);
@@ -83,18 +87,9 @@ namespace ApiLibrary.Core.Extentions
             var property = Expression.Property(parameter, field);
             foreach (var value in values)
             {
-                object obj = null;
-                if (property.Type == Type.GetType("string"))
-                {
-                    obj = TypeDescriptor.GetConverter(property.Type).ConvertFromString(value);
-                }
-                else
-                {
-                    obj = TypeDescriptor.GetConverter(property.Type).ConvertFromString(value.Replace(".", ","));
-                }
-                var constante = Expression.Constant(obj, property.Type);
+                var constante = property.Constant(value);
                 var condition = Expression.Equal(property, constante);
-                expression = expression.OrEqual<T>(condition);
+                expression = expression.OrCondition(condition);
             }
             var lambda = Expression.Lambda<Func<T, bool>>(expression, parameter);
             return query.Where(lambda);
@@ -117,6 +112,5 @@ namespace ApiLibrary.Core.Extentions
             }
             return data;
         }
-
     }
 }
