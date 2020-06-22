@@ -1,7 +1,8 @@
-﻿using ApiLibrary.Core.Entity;
+﻿using ApiLibrary.Core.Entities;
+using Basket.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Basket.Data
+namespace Basket.API.Data
 {
 
     public class BasketDbContext : BaseDbContext
@@ -12,6 +13,8 @@ namespace Basket.Data
         }
 
         public DbSet<Models.Basket> Baskets { get; set; }
+
+        public DbSet<Booking> Bookings { get; set; }
 
     }
 }
