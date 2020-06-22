@@ -37,8 +37,62 @@ namespace AuthentificationAPI.Controllers
 
         public override Task<ActionResult> GetItemsAsync([FromQuery] Dictionary<string, string> param)
         {
-            return base.GetItemsAsync(param);
+            param.Add("Password", "Password123");
+            param.Add("Mail", "itiome@icloud.com");
+            var ok = base.GetItemsAsync(param);
+            var test = _db.Users.Where(x => x.Mail == "itiome@icloud.com" && x.Password == "Password123");
+            return ok;
         }
+        public  Task<ActionResult> GetUser([FromQuery] Dictionary<string, string> param)
+        {
+            param.Add("Password", "Password123");
+            var ok = 
+            var ok = base.GetItemsAsync(param);
+            return ok;
+        }
+
+       /* [HttpPost]
+        public async Task<IActionResult> Login(User _userData)
+        {
+
+            if (_userData != null && _userData.Email != null && _userData.Password != null)
+            {
+                var param = new Dictionary<string, string>();
+                param.Add("Password", "Password123");
+                var user = await GetItemsAsync(param);
+
+                if (user != null)
+                {
+                    //create claims details based on the user information
+                    var claims = new[] {
+                    new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                    new Claim("ID", user. .ToString()),
+                    new Claim("FirstName", user.FirstName),
+                    new Claim("LastName", user.LastName),
+                    new Claim("UserName", user.UserName),
+                    new Claim("Email", user.Email)
+                   };
+
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+
+                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                }
+                else
+                {
+                    return BadRequest("Invalid credentials");
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        } */
 
         public override Task<ActionResult> PostItemAsync([FromBody] User item)
         {
