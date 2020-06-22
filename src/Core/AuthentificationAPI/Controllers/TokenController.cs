@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer.Utilities;
+using System.Data.Entity.Utilities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -20,9 +22,10 @@ namespace AuthentificationAPI.Controllers
     [ApiController]
     public class TokenController : BaseController<User, int, UserDbContext>
     {
-
-       public TokenController(UserDbContext context ) : base(context)
+        public IConfiguration _configuration;
+        public TokenController(IConfiguration config, UserDbContext context ) : base(context)
         {
+            _configuration = config;
         }
 
         public override Task<ActionResult> DeleteItemAsync([FromRoute] int id)
@@ -30,49 +33,46 @@ namespace AuthentificationAPI.Controllers
             return base.DeleteItemAsync(id);
         }
 
-        public override Task<ActionResult> GetItemByIdAsync([FromRoute] object id)
+        public override async Task<ActionResult> GetItemByIdAsync([FromRoute] object id)
         {
-            return base.GetItemByIdAsync(id);
+            return await base.GetItemByIdAsync(id);
         }
 
         public override Task<ActionResult> GetItemsAsync([FromQuery] Dictionary<string, string> param)
         {
-            param.Add("Password", "Password123");
-            param.Add("Mail", "itiome@icloud.com");
-            var ok = base.GetItemsAsync(param);
-            var test = _db.Users.Where(x => x.Mail == "itiome@icloud.com" && x.Password == "Password123");
-            return ok;
-        }
-        public  Task<ActionResult> GetUser([FromQuery] Dictionary<string, string> param)
-        {
-            param.Add("Password", "Password123");
-            var ok = 
-            var ok = base.GetItemsAsync(param);
-            return ok;
+            return base.GetItemsAsync(param);
         }
 
-       /* [HttpPost]
-        public async Task<IActionResult> Login(User _userData)
+        public int GetIdUser(string mail, string password)
         {
+            var test =  _db.Users.Where(x => x.Mail == mail && x.Password == password).Select(x => x.Id).FirstOrDefault();
+            return test;
+        }
 
-            if (_userData != null && _userData.Email != null && _userData.Password != null)
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromQuery] LoginQueryParams login)
+        {
+            if (login.IsPassword && login.IsEmail)
             {
-                var param = new Dictionary<string, string>();
-                param.Add("Password", "Password123");
-                var user = await GetItemsAsync(param);
 
-                if (user != null)
+                var model = await _db.Users.Where(x => x.Mail == login.Email).FirstOrDefaultAsync();
+                /*var userId =  GetIdUser(mail, password);
+                OkObjectResult user = (OkObjectResult)base.GetItemByIdAsync(userId).Result;
+                User model = (User)user.Value;*/
+                
+                if (model != null)
                 {
                     //create claims details based on the user information
                     var claims = new[] {
                     new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                    new Claim("ID", user. .ToString()),
-                    new Claim("FirstName", user.FirstName),
-                    new Claim("LastName", user.LastName),
-                    new Claim("UserName", user.UserName),
-                    new Claim("Email", user.Email)
+                    new Claim("ID", model.Id.ToString()),
+                    new Claim("FirstName", model.FirstName),
+                    new Claim("LastName", model.LastName),
+                    new Claim("Mail", model.Mail),
+                    new Claim("Password", model.Password)
                    };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -92,16 +92,15 @@ namespace AuthentificationAPI.Controllers
             {
                 return BadRequest();
             }
-        } */
-
-        public override Task<ActionResult> PostItemAsync([FromBody] User item)
-        {
-            return base.PostItemAsync(item);
         }
-
-        public override Task<ActionResult> PutItemAsync([FromBody] User item, [FromRoute] int id)
+        public class LoginQueryParams
         {
-            return base.PutItemAsync(item, id);
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public bool IsEmail =>
+                !string.IsNullOrWhiteSpace(Email);
+            public bool IsPassword =>
+                !string.IsNullOrWhiteSpace(Password);
         }
     }
 }
