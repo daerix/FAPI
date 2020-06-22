@@ -5,19 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Catalog.API.Data;
-using Catalog.API.Models;
+using ApiLibrary.Core.Entities;
+using CatalogAPI.Data;
+using CatalogAPI.Models;
 using ApiLibrary.Core.Controllers;
 using ApiLibrary.Core.Attributes;
 
-namespace Catalog.API.Controllers
+namespace CatalogAPI.Controllers
 {
 
     [ApiVersion("1")]
-    //[MaxPagination(10)]
-    public class GenresController : BaseController<Category, int, CatalogDbContext>
+    public class GenresController : BaseController<Genre, int, CatalogDbContext>
     {
-        public override int AcceptRange { get; set; } = 10;
 
         public GenresController(CatalogDbContext context) : base(context)
         {
