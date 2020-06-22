@@ -1,32 +1,30 @@
-﻿using System;
+﻿using ApiLibrary.Core.Attributes;
+using ApiLibrary.Core.Entities;
+using ApiLibrary.Core.Exceptions;
+using ApiLibrary.Core.Extentions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using ApiLibrary.Core.Extentions;
-using ApiLibrary.Core.Entities;
-using ApiLibrary.Core.Models;
-using ApiLibrary.Core.Exceptions;
-using ApiLibrary.Core.Attributes;
 using System.Reflection;
-using Microsoft.Extensions.Primitives;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+
 
 namespace ApiLibrary.Core.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [AcceptRanges(25)]
-    public abstract class BaseController<TModel, TKey, TContext> : ControllerBase 
-        where TContext : BaseDbContext 
+    [SortQueryKey("Sort")]
+    [FieldQueryKey("Field")]
+    [RangeQueryKey("Range")]
+    public abstract class BaseController<TModel, TKey, TContext> : ControllerBase
+        where TContext : BaseDbContext
         where TModel : BaseModel<TKey>
-    { 
+    {
         private readonly TContext _db;
-        public string sortKey = "sort";
-        public string rangeKey = "range";
-        public string fieldKey = "field";
 
         public BaseController(TContext db)
         {
@@ -37,13 +35,17 @@ namespace ApiLibrary.Core.Controllers
         [ProducesResponseType(typeof(IEnumerable<Object>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        //TODO: Revoir QeryParams!
         public virtual async Task<ActionResult> GetItemsAsync([FromQuery] Dictionary<string, string> param)
         {
             string paramsValue;
             IQueryable<TModel> query = _db.Set<TModel>().AsQueryable<TModel>();
             var acceptRange = this.GetType().GetCustomAttribute<AcceptRangesAttribute>().AcceptRange;
+            var sortQueryKey = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
+            var fieldQueryKey = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
+            var rangeQueryKey = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
             var propeties = typeof(TModel).GetProperties();
-            
+
             query = query.Where(x => x.DeletedAt == null);
 
             foreach (var property in propeties)
@@ -51,8 +53,12 @@ namespace ApiLibrary.Core.Controllers
                 if (param.TryGetValue(property.Name.ToLower(), out paramsValue) || param.TryGetValue(property.Name, out paramsValue))
                 {
                     var values = paramsValue.Split(',');
-                    if (values.Count() == 1 && values[0].Contains("*"))
+                    if (values.Length == 1 && values[0].Contains("*"))
                     {
+                        if (property.PropertyType != typeof(string))
+                        {
+                            throw new SearchException($"The requested research is not allowed on this type of property ({ property.PropertyType }). Accepted type: String");
+                        }
                         query = query.Search(property.Name, values[0]);
                     }
                     else
@@ -62,13 +68,14 @@ namespace ApiLibrary.Core.Controllers
                 }
             }
 
-            if (param.TryGetValue(sortKey, out paramsValue))
+            if (param.TryGetValue(sortQueryKey, out paramsValue) || param.TryGetValue(sortQueryKey.ToLower(), out paramsValue))
             {
                 try
                 {
                     var field = paramsValue.Split(',');
                     query = query.Sort(field);
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     return BadRequest(e.Message);
                 }
@@ -76,7 +83,7 @@ namespace ApiLibrary.Core.Controllers
 
             Response.Headers.Add("Accept-Range", acceptRange.ToString());
 
-            if (param.TryGetValue(rangeKey, out paramsValue))
+            if (param.TryGetValue(rangeQueryKey, out paramsValue) || param.TryGetValue(rangeQueryKey.ToLower(), out paramsValue))
             {
                 try
                 {
@@ -94,15 +101,14 @@ namespace ApiLibrary.Core.Controllers
                     query = query.Range(start, end);
 
                     string url = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-
-                    string links = $"<{url}?range=0-{(end - start)}>; rel=\"first\"," +
-                                    $"<{url}?range = {(start - (end - start) < 0 ? 0 : start - (end - start))}-{(start - (end - start) < 0 ? 0 : start - (end - start)) + (end - start) - 1}>; rel =\"prev\"," +
-                                    $"<{url}?range = {end + 1}-{(end + (end - start) > total - 1 ? total : end + (end - start) - 1)}>; rel =\"next\"," +
-                                    $"<{url}?range = {total - (end - start) + 1}-{total - 1}>; rel =\"last\"";
-
+                    
+                    //TODO: Revoir les links (mauvais algo de calcul)
+                    string links = $"<{url}?range=0-{count}>; rel=\"first\"," +
+                                    $"<{url}?range = {(start - count < 0 ? 0 : start - count)}-{(start - count < 0 ? 0 : start - count) + count}>; rel =\"prev\"," +
+                                    $"<{url}?range = {(end + 1 > total - 1 ? total - 1 : end + 1)}-{(end + count > total - 1 ? total - 1 : end + count - 1)}>; rel =\"next\"," +
+                                    $"<{url}?range = {total - count + 1}-{total - 1}>; rel =\"last\"";
                     Response.Headers.Add("Link", links);
                     Response.Headers.Add("Content-Range", $"{start}-{end}/{total}");
-                    Response.Headers.Add("Content-Length", $"{(count)}");
                 }
                 catch (Exception e)
                 {
@@ -111,7 +117,7 @@ namespace ApiLibrary.Core.Controllers
             }
 
             IEnumerable<object> result = null;
-            if (param.TryGetValue(fieldKey, out paramsValue))
+            if (param.TryGetValue(fieldQueryKey, out paramsValue) || param.TryGetValue(fieldQueryKey.ToLower(), out paramsValue))
             {
                 try
                 {
@@ -122,7 +128,7 @@ namespace ApiLibrary.Core.Controllers
                 {
                     return BadRequest(e.Message);
                 }
-            } 
+            }
             else
             {
                 try
@@ -135,7 +141,7 @@ namespace ApiLibrary.Core.Controllers
                 }
             }
 
-            if (param.ContainsKey(rangeKey))
+            if (param.ContainsKey(rangeQueryKey) || param.ContainsKey(rangeQueryKey.ToLower()))
             {
                 return Partial(result);
             }
@@ -154,7 +160,6 @@ namespace ApiLibrary.Core.Controllers
             }
             return NotFound();
         }
-
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
@@ -202,7 +207,6 @@ namespace ApiLibrary.Core.Controllers
             }
             return NotFound();
         }
-
 
         protected PartialResult Partial(object o)
         {
