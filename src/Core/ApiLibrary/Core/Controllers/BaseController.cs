@@ -24,7 +24,7 @@ namespace ApiLibrary.Core.Controllers
         where TContext : BaseDbContext
         where TModel : BaseModel<TKey>
     {
-        private readonly TContext _db;
+        protected readonly TContext _db;
 
         public BaseController(TContext db)
         {
