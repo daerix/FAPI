@@ -23,7 +23,7 @@ namespace ApiLibrary.Core.Controllers
         where TContext : BaseDbContext 
         where TModel : BaseModel<TKey>
     { 
-        private readonly TContext _db;
+        protected readonly TContext _db;
         public string sortKey = "sort";
         public string rangeKey = "range";
         public string fieldKey = "field";
@@ -74,7 +74,10 @@ namespace ApiLibrary.Core.Controllers
                 }
             }
 
-            Response.Headers.Add("Accept-Range", acceptRange.ToString());
+            if(Response != null)
+            {
+                Response.Headers.Add("Accept-Range", acceptRange.ToString());
+            }
 
             if (param.TryGetValue(rangeKey, out paramsValue))
             {
@@ -99,10 +102,12 @@ namespace ApiLibrary.Core.Controllers
                                     $"<{url}?range = {(start - (end - start) < 0 ? 0 : start - (end - start))}-{(start - (end - start) < 0 ? 0 : start - (end - start)) + (end - start) - 1}>; rel =\"prev\"," +
                                     $"<{url}?range = {end + 1}-{(end + (end - start) > total - 1 ? total : end + (end - start) - 1)}>; rel =\"next\"," +
                                     $"<{url}?range = {total - (end - start) + 1}-{total - 1}>; rel =\"last\"";
-
-                    Response.Headers.Add("Link", links);
-                    Response.Headers.Add("Content-Range", $"{start}-{end}/{total}");
-                    Response.Headers.Add("Content-Length", $"{(count)}");
+                    if (Response != null)
+                    {
+                        Response.Headers.Add("Link", links);
+                        Response.Headers.Add("Content-Range", $"{start}-{end}/{total}");
+                        Response.Headers.Add("Content-Length", $"{(count)}");
+                    }
                 }
                 catch (Exception e)
                 {

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Basket.API.Controllers;
+using Basket.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +27,7 @@ namespace Basket
         {
             services.AddApiVersioning();
             services.AddControllers();
-            services.AddDbContext<CatalogDbContext>(options =>
+            services.AddDbContext<BasketDbContext>(options =>
             {
                 options.UseSqlServer(_configuration.GetConnectionString("ApiCatalogConnection"));
             });
