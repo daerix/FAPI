@@ -37,7 +37,7 @@ namespace ApiLibrary.Core.Extentions
         public static Expression Constant(this MemberExpression expression, string value)
         {
             //TODO: Revoir la verification en fonction du type
-            if (expression.Type != Type.GetType("string"))
+            if (expression.Type != typeof(string))
             {
                 value = value.Replace(".", ",");
             }
