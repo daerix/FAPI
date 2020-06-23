@@ -1,9 +1,12 @@
 ﻿using ApiLibrary.Core.Controllers;
 using Basket.API.Data;
 using Basket.API.Models;
+using Mailjet.Client;
+using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Net;
@@ -47,7 +50,7 @@ namespace Basket.API.Controllers
 
         public override async Task<ActionResult> PutItemAsync([FromBody] Models.Basket basket, [FromRoute] int id)
         {
-            if (id.Equals(basket.Id))
+            if (id != basket.Id)
             {
                 return BadRequest();
             }
@@ -65,6 +68,8 @@ namespace Basket.API.Controllers
                     _db.Remove(basket);
                 }
                 await _db.SaveChangesAsync();
+                //TODO change to the real user
+                SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", 60);
                 return NoContent();
             }
             else
@@ -90,7 +95,6 @@ namespace Basket.API.Controllers
             return NoContent();
         }
 
-
         private void SetTimer()
         {
             aTimer = new System.Timers.Timer(10000);
@@ -98,7 +102,7 @@ namespace Basket.API.Controllers
             aTimer.Enabled = true;
         }
 
-        private async void CleanData(Object source, ElapsedEventArgs e)
+        private void CleanData(Object source, ElapsedEventArgs e)
         {
             //_db.Database.OpenConnection();
             //aTimer.Stop();
@@ -110,6 +114,45 @@ namespace Basket.API.Controllers
             //    await DeleteItemAsync(basket.Id);
             //}
             //aTimer.Start();
+        }
+
+
+        private async void SendValidationMailAsync(Models.Basket basket, string userEmail, string firstName, string lastName, int totalPrice)
+        {
+            MailjetClient client = new MailjetClient("4f32aface96993dabdc99274cac8f363","d4349dcf478531808acefc8d681f3ee5")
+            {
+                Version = Mailjet.Client.ApiVersion.V3_1,
+            };
+            MailjetRequest request = new MailjetRequest
+            {
+                Resource = Send.Resource,
+            }.Property(Send.Messages, new JArray {
+                new JObject {
+                 {"From", new JObject {
+                  {"Email", "virgilesassano@gmail.com"},
+                  {"Name", "FAPI"}
+                  }},
+                 {"To", new JArray {
+                  new JObject {
+                   {"Email",userEmail},
+                   {"Name", firstName + " " + lastName }
+                   }
+                  }},
+                 {"TemplateID", 1516707},
+                 {"TemplateLanguage", true},
+                 {"Subject", "FAPI Command"},
+                 {"Variables", new JObject {
+                  {"nom", "SASSANO\"]][[data: prénom:\"Virgile\"]]</ title >< !--[if !mso]>< !---->< meta http - equiv = \"X-UA-Compatible\" content = \"IE=edge\" >< !--< ![endif]-- >< meta http - equiv = \"Content-Type\" content = \"text/html; charset=UTF-8\" >< meta name = \"viewport\" content = \"width=device-width,initial-scale=1\" >< style type = \"text/css"},
+{"firstname", firstName},
+{"total_price", totalPrice},
+{"order_date", basket.DeletedAt},
+{"order_id", basket.Id}
+                  }
+}
+                 }
+                });
+
+            MailjetResponse response = await client.PostAsync(request);
         }
     }
 }
