@@ -88,8 +88,7 @@ namespace AuthentificationAPI.Controllers
                     cookieOptions.Expires = DateTimeOffset.UtcNow.AddHours(4);
                     cookieOptions.Domain = Request.Host.Value;
                     cookieOptions.Path = "/";
-                    Response.Cookies.Append("jwt", tokenString, cookieOptions);
-                    var ok = Request.Cookies["jwt"];
+                    HttpContext.Session.SetString("JWToken", tokenString);
                     return Ok(new JwtSecurityTokenHandler().WriteToken(token));
                 }
                 else
