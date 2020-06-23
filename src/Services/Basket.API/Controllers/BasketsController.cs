@@ -119,7 +119,11 @@ namespace Basket.API.Controllers
         }
 
 
+<<<<<<< HEAD
         private async void SendValidationMailAsync(Models.Basket basket, string userEmail, string firstName, string lastName, decimal totalPrice)
+=======
+        private async void SendValidationMailAsync(Models.Basket basket, string userEmail, string firstName, string lastName, int totalPrice)
+>>>>>>> a1cfa11515578113d9bf8505b2d39326cc781ba9
         {
             MailjetClient client = new MailjetClient("4f32aface96993dabdc99274cac8f363","d4349dcf478531808acefc8d681f3ee5")
             {
