@@ -4,6 +4,8 @@ using ApiLibrary.Core.Exceptions;
 using ApiLibrary.Core.Extentions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,11 +46,11 @@ namespace ApiLibrary.Core.Controllers
             var sortQueryKey = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
             var fieldQueryKey = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
             var rangeQueryKey = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
-            var propeties = typeof(TModel).GetProperties();
+            var properties = typeof(TModel).GetProperties();
 
             query = query.Where(x => x.DeletedAt == null);
 
-            foreach (var property in propeties)
+            foreach (var property in properties)
             {
                 if (param.TryGetValue(property.Name.ToLower(), out paramsValue) || param.TryGetValue(property.Name, out paramsValue))
                 {
@@ -61,6 +63,14 @@ namespace ApiLibrary.Core.Controllers
                         }
                         query = query.Search(property.Name, values[0]);
                     }
+                    else if (values.Length == 2 && values[0].Contains("[") && values[1].Contains("]"))
+                    {
+                        if (property.PropertyType == typeof(string))
+                        {
+                            throw new ForkException($"The requested fork is not allowed on this type of property ({ property.PropertyType }). Accepted type: Integer, Decimal, DateTime");
+                        }
+                        query = query.Fork(property.Name, values);
+                    } 
                     else
                     {
                         query = query.Filter(property.Name, values);
@@ -153,11 +163,12 @@ namespace ApiLibrary.Core.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] object id)
         {
-            var item = await _db.FindAsync<TModel>(id);
+            var item = _db.Find<TModel>(id);
             if (item != null)
             {
                 return Ok(item);
             }
+
             return NotFound();
         }
 
