@@ -95,6 +95,35 @@ namespace ApiLibrary.Core.Extentions
             return query.Where(lambda);
         }
 
+        public static IQueryable<T> Fork<T>(this IQueryable<T> query, string field, string[] values)
+        {
+            Expression expression = null;
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, field);
+            foreach (var value in values)
+            {
+                Expression condition;
+                var index = Array.IndexOf(values, value);
+                var boundary = value.Replace("[", "").Replace("]", "");
+                if (!string.IsNullOrWhiteSpace(boundary))
+                {
+                    var constante = property.Constant(boundary);
+                    if (index == 0)
+                    {
+
+                        condition = Expression.GreaterThanOrEqual(property, constante);
+                    }
+                    else
+                    {
+                        condition = Expression.LessThanOrEqual(property, constante);
+                    }
+                    expression = expression.AndCondition(condition);
+                }
+            }
+            var lambda = Expression.Lambda<Func<T, bool>>(expression, parameter);
+            return query.Where(lambda);
+        }
+
         private static IOrderedQueryable<T> SortAsc<T, TKey>(this IQueryable<T> query, Expression<Func<T, TKey>> keySelector) =>
             query.Expression.Type == typeof(IOrderedQueryable<T>) ? ((IOrderedQueryable<T>)query).ThenBy(keySelector) : query.OrderBy(keySelector);
 
