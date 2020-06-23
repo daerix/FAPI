@@ -4,6 +4,8 @@ using ApiLibrary.Core.Exceptions;
 using ApiLibrary.Core.Extentions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -159,9 +161,21 @@ namespace ApiLibrary.Core.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(IEnumerable<Object>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] object id)
+        public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] TKey id, [FromQuery] bool deepFetch = false)
         {
-            var item = await _db.FindAsync<TModel>(id);
+            IQueryable<TModel> query = _db.Set<TModel>().AsQueryable<TModel>();
+            query = query.Where(x => x.Id.Equals(id));
+            if (deepFetch)
+            {
+                var fetchProperties = typeof(TModel).GetProperties().Where(x => x.GetCustomAttribute(typeof(ForeignKeyAttribute)) != null);
+                foreach (var property in fetchProperties)
+                {
+                    query = query.Include(property.Name);
+                }
+            }
+
+            var item = await query.FirstAsync();
+
             if (item != null)
             {
                 return Ok(item);
