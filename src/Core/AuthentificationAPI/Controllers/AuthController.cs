@@ -23,10 +23,10 @@ namespace AuthentificationAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TokenController : BaseController<User, int, UserDbContext>
+    public class AuthController : BaseController<User, int, UserDbContext>
     {
         public IConfiguration _configuration;
-        public TokenController(IConfiguration config, UserDbContext context ) : base(context)
+        public AuthController(IConfiguration config, UserDbContext context ) : base(context)
         {
             _configuration = config;
         }
@@ -47,12 +47,6 @@ namespace AuthentificationAPI.Controllers
             return base.GetItemsAsync(param);
         }
 
-        public int GetIdUser(string mail, string password)
-        {
-            var test =  _db.Users.Where(x => x.Mail == mail && x.Password == password).Select(x => x.Id).FirstOrDefault();
-            return test;
-        }
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromQuery] LoginQueryParams login)
@@ -61,13 +55,10 @@ namespace AuthentificationAPI.Controllers
             {
 
                 var model = await _db.Users.Where(x => x.Mail == login.Email).FirstOrDefaultAsync();
-                /*var userId =  GetIdUser(mail, password);
-                OkObjectResult user = (OkObjectResult)base.GetItemByIdAsync(userId).Result;
-                User model = (User)user.Value;*/
+                
                 
                 if (model != null)
                 {
-                    //create claims details based on the user information
                     var claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
