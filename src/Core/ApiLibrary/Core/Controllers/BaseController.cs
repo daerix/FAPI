@@ -4,8 +4,6 @@ using ApiLibrary.Core.Exceptions;
 using ApiLibrary.Core.Extentions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -163,12 +161,11 @@ namespace ApiLibrary.Core.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] object id)
         {
-            var item = _db.Find<TModel>(id);
+            var item = await _db.FindAsync<TModel>(id);
             if (item != null)
             {
                 return Ok(item);
             }
-
             return NotFound();
         }
 
