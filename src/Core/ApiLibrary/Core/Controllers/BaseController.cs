@@ -150,7 +150,7 @@ namespace ApiLibrary.Core.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(IEnumerable<Object>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] object id)
+        public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] int id)
         {
             var item = await _db.FindAsync<TModel>(id);
             if (item != null)

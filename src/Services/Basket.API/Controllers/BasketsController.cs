@@ -2,6 +2,7 @@
 using Basket.API.Data;
 using Basket.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Basket.API.Controllers
 
         public BasketsController(BasketDbContext db) : base(db)
         {
-            SetTimer();
+            //SetTimer();
         }
 
         public override async Task<ActionResult> PostItemAsync([FromBody] Models.Basket basket)
@@ -99,6 +100,7 @@ namespace Basket.API.Controllers
 
         private async void CleanData(Object source, ElapsedEventArgs e)
         {
+            //_db.Database.OpenConnection();
             //aTimer.Stop();
             //var dateTimeNow = DateTime.Now;
             //var dateTimeMinusElapsedTime = dateTimeNow.AddMinutes(-1);
