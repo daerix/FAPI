@@ -11,6 +11,9 @@ using ApiLibrary.Core.Controllers;
 using ApiLibrary.Core.Models;
 using AuthentificationAPI.Data;
 using AuthentificationAPI.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +41,7 @@ namespace AuthentificationAPI.Controllers
             return await base.GetItemByIdAsync(id);
         }
 
+        [Authorize]
         public override Task<ActionResult> GetItemsAsync([FromQuery] Dictionary<string, string> param)
         {
             return base.GetItemsAsync(param);
@@ -65,22 +69,27 @@ namespace AuthentificationAPI.Controllers
                 {
                     //create claims details based on the user information
                     var claims = new[] {
-                    new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                    new Claim("ID", model.Id.ToString()),
-                    new Claim("FirstName", model.FirstName),
-                    new Claim("LastName", model.LastName),
-                    new Claim("Mail", model.Mail),
-                    new Claim("Password", model.Password)
-                   };
+                        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                        new Claim("ID", model.Id.ToString()),
+                        new Claim("FirstName", model.FirstName),
+                        new Claim("LastName", model.LastName),
+                        new Claim("Mail", model.Mail)
+                    };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
                     var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                     var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-
+                    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                    var cookieOptions = new CookieOptions();
+                    cookieOptions.Expires = DateTimeOffset.UtcNow.AddHours(4);
+                    cookieOptions.Domain = Request.Host.Value;
+                    cookieOptions.Path = "/";
+                    Response.Cookies.Append("jwt", tokenString, cookieOptions);
+                    var ok = Request.Cookies["jwt"];
                     return Ok(new JwtSecurityTokenHandler().WriteToken(token));
                 }
                 else
