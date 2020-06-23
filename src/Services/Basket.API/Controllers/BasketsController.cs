@@ -61,15 +61,18 @@ namespace Basket.API.Controllers
                 if (basket.State == Enums.BasketStates.VALIDATED)
                 {
                     var bookingToDelete = _db.Set<Booking>().Where(x => x.BasketID == basket.Id).ToList();
+                    var price = (decimal) 0;
                     foreach (var booking in bookingToDelete)
                     {
+                        price += (decimal) booking.Price;
                         _db.Remove(booking);
                     }
                     _db.Remove(basket);
                 }
+
                 await _db.SaveChangesAsync();
                 //TODO change to the real user
-                SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", 60);
+                SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", price);
                 return NoContent();
             }
             else
@@ -140,9 +143,9 @@ namespace Basket.API.Controllers
                   }},
                  {"TemplateID", 1516707},
                  {"TemplateLanguage", true},
-                 {"Subject", "FAPI Command"},
+                 {"Subject", "FAPI Validated Command"},
                  {"Variables", new JObject {
-                  {"nom", "SASSANO\"]][[data: prénom:\"Virgile\"]]</ title >< !--[if !mso]>< !---->< meta http - equiv = \"X-UA-Compatible\" content = \"IE=edge\" >< !--< ![endif]-- >< meta http - equiv = \"Content-Type\" content = \"text/html; charset=UTF-8\" >< meta name = \"viewport\" content = \"width=device-width,initial-scale=1\" >< style type = \"text/css"},
+                  {"nom", "SASSANO\"]][[data: prénom:\"Virgile\"]]</ title >< !--[if !mso]>< !---->< meta http - equiv = \"X-UA-Compatible\" content = \"IE=edge\" >< !--< ![endif]-- >< meta http - equiv = \"Content-Type\" content = \"text/html; charset=UTF-8\" >< meta name = \"viewport\" content = \"width=device-width,initial-scale=1\" >< style type = \"text/css"}, 
 {"firstname", firstName},
 {"total_price", totalPrice},
 {"order_date", basket.DeletedAt},
