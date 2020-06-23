@@ -58,10 +58,10 @@ namespace Basket.API.Controllers
             if (ModelState.IsValid)
             {
                 _db.Set<Models.Basket>().Update(basket);
+                var price = (decimal) 0;
                 if (basket.State == Enums.BasketStates.VALIDATED)
                 {
                     var bookingToDelete = _db.Set<Booking>().Where(x => x.BasketID == basket.Id).ToList();
-                    var price = (decimal) 0;
                     foreach (var booking in bookingToDelete)
                     {
                         price += (decimal) booking.Price;
@@ -71,7 +71,6 @@ namespace Basket.API.Controllers
                 }
 
                 await _db.SaveChangesAsync();
-                //TODO change to the real user
                 SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", price);
                 return NoContent();
             }
@@ -120,7 +119,7 @@ namespace Basket.API.Controllers
         }
 
 
-        private async void SendValidationMailAsync(Models.Basket basket, string userEmail, string firstName, string lastName, int totalPrice)
+        private async void SendValidationMailAsync(Models.Basket basket, string userEmail, string firstName, string lastName, decimal totalPrice)
         {
             MailjetClient client = new MailjetClient("4f32aface96993dabdc99274cac8f363","d4349dcf478531808acefc8d681f3ee5")
             {

@@ -23,16 +23,11 @@ namespace ApiLibrary.Core.Controllers
     public abstract class BaseController<TModel, TKey, TContext> : ControllerBase
         where TContext : BaseDbContext
         where TModel : BaseModel<TKey>
-<<<<<<< HEAD
-    {
-        protected readonly TContext _db;
-=======
     { 
         protected readonly TContext _db;
         public string sortKey = "sort";
         public string rangeKey = "range";
         public string fieldKey = "field";
->>>>>>> Added UT for Basket.API project, created controller for basket and booking model
 
         public BaseController(TContext db)
         {
@@ -112,16 +107,6 @@ namespace ApiLibrary.Core.Controllers
                     query = query.Range(start, end);
 
                     string url = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-<<<<<<< HEAD
-                    
-                    //TODO: Revoir les links (mauvais algo de calcul)
-                    string links = $"<{url}?range=0-{count}>; rel=\"first\"," +
-                                    $"<{url}?range = {(start - count < 0 ? 0 : start - count)}-{(start - count < 0 ? 0 : start - count) + count}>; rel =\"prev\"," +
-                                    $"<{url}?range = {(end + 1 > total - 1 ? total - 1 : end + 1)}-{(end + count > total - 1 ? total - 1 : end + count - 1)}>; rel =\"next\"," +
-                                    $"<{url}?range = {total - count + 1}-{total - 1}>; rel =\"last\"";
-                    Response.Headers.Add("Link", links);
-                    Response.Headers.Add("Content-Range", $"{start}-{end}/{total}");
-=======
 
                     string links = $"<{url}?range=0-{(end - start)}>; rel=\"first\"," +
                                     $"<{url}?range = {(start - (end - start) < 0 ? 0 : start - (end - start))}-{(start - (end - start) < 0 ? 0 : start - (end - start)) + (end - start) - 1}>; rel =\"prev\"," +
@@ -133,7 +118,6 @@ namespace ApiLibrary.Core.Controllers
                         Response.Headers.Add("Content-Range", $"{start}-{end}/{total}");
                         Response.Headers.Add("Content-Length", $"{(count)}");
                     }
->>>>>>> Added UT for Basket.API project, created controller for basket and booking model
                 }
                 catch (Exception e)
                 {
