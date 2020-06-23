@@ -8,22 +8,24 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{8931FA3C-B1E3-4D31-A0D6-380128C99D27}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B5B1A2E3-850C-4F85-9278-D771EF1F9993}"
-<<<<<<< HEAD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiLibrary", "Core\ApiLibrary\ApiLibrary.csproj", "{66436F23-43A4-4A99-B68A-0E929082383B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.API", "Services\Basket.API\Basket.API.csproj", "{E1FDCD2B-C39F-452A-863D-7AEFB17F5298}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Test", "Services\Basket.Test\Basket.Test.csproj", "{33BB10FE-D57D-43D3-8868-0C6CA83EA4A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.Test", "Services\Basket.Test\Basket.Test.csproj", "{33BB10FE-D57D-43D3-8868-0C6CA83EA4A2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E1FDCD2B-C39F-452A-863D-7AEFB17F5298} = {E1FDCD2B-C39F-452A-863D-7AEFB17F5298}
 	EndProjectSection
+<<<<<<< HEAD
 =======
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiLibrary", "Core\ApiLibrary\ApiLibrary.csproj", "{66436F23-43A4-4A99-B68A-0E929082383B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket", "Services\Basket\Basket.csproj", "{E1FDCD2B-C39F-452A-863D-7AEFB17F5298}"
 >>>>>>> Basket Project Init Commit
+=======
+>>>>>>> Base for scheduling cleaning
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,13 +41,15 @@ Global
 		{E1FDCD2B-C39F-452A-863D-7AEFB17F5298}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1FDCD2B-C39F-452A-863D-7AEFB17F5298}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1FDCD2B-C39F-452A-863D-7AEFB17F5298}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
 		{33BB10FE-D57D-43D3-8868-0C6CA83EA4A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{33BB10FE-D57D-43D3-8868-0C6CA83EA4A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33BB10FE-D57D-43D3-8868-0C6CA83EA4A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33BB10FE-D57D-43D3-8868-0C6CA83EA4A2}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 =======
 >>>>>>> Basket Project Init Commit
+=======
+>>>>>>> Base for scheduling cleaning
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,10 +59,12 @@ Global
 		{B5B1A2E3-850C-4F85-9278-D771EF1F9993} = {00C504C8-E160-4835-919C-7489E9E6A79C}
 		{66436F23-43A4-4A99-B68A-0E929082383B} = {B5B1A2E3-850C-4F85-9278-D771EF1F9993}
 		{E1FDCD2B-C39F-452A-863D-7AEFB17F5298} = {8931FA3C-B1E3-4D31-A0D6-380128C99D27}
-<<<<<<< HEAD
 		{33BB10FE-D57D-43D3-8868-0C6CA83EA4A2} = {8931FA3C-B1E3-4D31-A0D6-380128C99D27}
+<<<<<<< HEAD
 =======
 >>>>>>> Basket Project Init Commit
+=======
+>>>>>>> Base for scheduling cleaning
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49A8A69C-F641-4E22-BDB0-653C86E442A7}
