@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace Basket
 {
@@ -31,6 +32,10 @@ namespace Basket
             {
                 options.UseSqlServer(_configuration.GetConnectionString("ApiCatalogConnection"));
             });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.API", Version = "v1" });
+            });
 
         }
 
@@ -40,6 +45,13 @@ namespace Basket
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 
