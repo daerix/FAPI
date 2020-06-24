@@ -5,13 +5,13 @@ services:
       build:
         context: .
         dockerfile: "./Services/Basket/Basket.API/Dockerfile"
-    catalog-api:
-      image: fapiimages.azurecr.io/catalog
-      build:
-        context: .
-        dockerfile: "./Services/Catalog/Catalog.API/Dockerfile"
-    authentification-api:
-      image: fapiimages.azurecr.io/authentification
-      build:
-        context: .
-        dockerfile: "./Services/Authentification/Authentification.API/Dockerfile"
+    # catalog-api:
+    #   image: fapiimages.azurecr.io/catalog
+    #   build:
+    #     context: .
+    #     dockerfile: "./Services/Catalog/Catalog.API/Dockerfile"
+    # authentification-api:
+    #   image: fapiimages.azurecr.io/authentification
+    #   build:
+    #     context: .
+    #     dockerfile: "./Services/Authentification/Authentification.API/Dockerfile"
