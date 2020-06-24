@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApiLibrary.Core.Entities;
-using CatalogAPI.Data;
-using CatalogAPI.Models;
+using Catalog.API.Data;
+using Catalog.API.Models;
 using ApiLibrary.Core.Controllers;
 using ApiLibrary.Core.Attributes;
 
-namespace CatalogAPI.Controllers
+namespace Catalog.API.Controllers
 {
 
     [ApiVersion("1")]

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using ApiLibrary.Core.Controllers;
 using ApiLibrary.Core.Entities;
 using ApiLibrary.Core.Extensions;
-using CatalogAPI.Data;
-using CatalogAPI.Models;
+using Catalog.API.Data;
+using Catalog.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace CatalogAPI.Controllers
+namespace Catalog.API.Controllers
 {
     
     [ApiVersion("1")]

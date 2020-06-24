@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CatalogAPI.Migrations
+namespace Catalog.API.Migrations
 {
     public partial class SchemaTables : Migration
     {

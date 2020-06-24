@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CatalogAPI.Models
+namespace Catalog.API.Models
 {
     public enum Type { Male, Female }
 
