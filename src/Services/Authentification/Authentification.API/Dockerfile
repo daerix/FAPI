@@ -15,7 +15,7 @@ COPY "Core/ApiLibrary" "Core/ApiLibrary/"
 COPY "Services/Authentification/Authentification.API" "Services/Authentification/Authentification.API/"
 RUN dotnet restore "Services/Authentification/Authentification.API/Authentification.API.csproj"
 COPY . .
-WORKDIR "/src/Services/Authentification/Authentification.API"
+WORKDIR "Services/Authentification/Authentification.API"
 RUN dotnet build "Authentification.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
