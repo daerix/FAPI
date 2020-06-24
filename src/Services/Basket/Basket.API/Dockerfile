@@ -3,17 +3,19 @@
 #Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
 #For more information, please see https://aka.ms/containercompat
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-nanoserver-1903 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1903 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Services/Basket.API/Basket.API.csproj", "Services/Basket.API/"]
+COPY "FAPI.sln" "FAPI.sln"
+COPY "Core/ApiLibrary" "Core/ApiLibrary/"
+COPY "Services/Basket.API" "Services/Basket.API/"
 RUN dotnet restore "Services/Basket.API/Basket.API.csproj"
 COPY . .
-WORKDIR "/src/Services/Basket"
+WORKDIR "Services/Basket.API"
 RUN dotnet build "Basket.API.csproj" -c Release -o /app/build
 
 FROM build AS publish

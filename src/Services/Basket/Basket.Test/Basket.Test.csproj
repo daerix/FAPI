@@ -16,8 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\ApiLibrary\ApiLibrary.csproj" />
-    <ProjectReference Include="..\Basket.API\Basket.API.csproj" />
+    <ProjectReference Include="..\..\..\Core\ApiLibrary\ApiLibrary.csproj" />
     <ProjectReference Include="..\Basket.API\Basket.API.csproj" />
   </ItemGroup>
 

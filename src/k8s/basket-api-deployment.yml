@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basket-api-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: basket-api
+  template:
+    metadata:
+      labels:
+        app: basket-api
+    spec:
+      containers:
+        - name: basket
+          image: fapiimages.azurecr.io/samples/fapi
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+      
+      imagePullSecrets:
+        - name: fapi-registry
