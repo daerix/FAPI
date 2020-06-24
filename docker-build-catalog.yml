@@ -1,4 +1,5 @@
 # Docker
+
 # Build and push an image to Azure Container Registry
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
@@ -28,12 +29,11 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
+    - task: DockerCompose@0
       inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscription: 'Azure pour les étudiants(3ba14322-177a-4733-bf54-2676d79bda07)'
+        azureContainerRegistry: '{"loginServer":"fapiimages.azurecr.io", "id" : "/subscriptions/3ba14322-177a-4733-bf54-2676d79bda07/resourceGroups/FAPI/providers/Microsoft.ContainerRegistry/registries/FAPIimages"}'
+        dockerComposeFile: './docker-compose.yml'
+        action: 'Run a Docker Compose command'
+        dockerComposeCommand: 'docker-compose build'
