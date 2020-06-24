@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CatalogAPI.Models
+namespace Catalog.API.Models
 { 
     public class Actor : BaseModel<int>
     {

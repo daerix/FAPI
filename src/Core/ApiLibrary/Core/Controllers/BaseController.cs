@@ -119,8 +119,7 @@ namespace ApiLibrary.Core.Controllers
                     query = query.Range(start, end);
 
                     string url = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-                    
-                    //TODO: Revoir les links (mauvais algo de calcul)
+
                     string links = $"<{url}?range=0-{count}>; rel=\"first\"," +
                                     $"<{url}?range = {(start - count < 0 ? 0 : start - count)}-{(start - count < 0 ? 0 : start - count) + count}>; rel =\"prev\"," +
                                     $"<{url}?range = {(end + 1 > total - 1 ? total - 1 : end + 1)}-{(end + count > total - 1 ? total - 1 : end + count + 1)}>; rel =\"next\"," +

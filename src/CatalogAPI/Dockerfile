@@ -8,16 +8,16 @@ EXPOSE 443
 
 FROM microsoft/dotnet:2.2-sdk-nanoserver-1803 AS build
 WORKDIR /src
-COPY ["CatalogAPI/CatalogAPI.csproj", "CatalogAPI/"]
-RUN dotnet restore "CatalogAPI/CatalogAPI.csproj"
+COPY ["Catalog.API/Catalog.API.csproj", "Catalog.API/"]
+RUN dotnet restore "Catalog.API/Catalog.API.csproj"
 COPY . .
-WORKDIR "/src/CatalogAPI"
-RUN dotnet build "CatalogAPI.csproj" -c Release -o /app
+WORKDIR "/src/Catalog.API"
+RUN dotnet build "Catalog.API.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "CatalogAPI.csproj" -c Release -o /app
+RUN dotnet publish "Catalog.API.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "CatalogAPI.dll"]
+ENTRYPOINT ["dotnet", "Catalog.API.dll"]

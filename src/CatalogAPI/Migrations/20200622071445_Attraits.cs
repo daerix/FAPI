@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CatalogAPI.Migrations
+namespace Catalog.API.Migrations
 {
     public partial class Attraits : Migration
     {
