@@ -100,6 +100,14 @@ namespace ApiLibrary.Core.Controllers
                     var tab = paramsValue.Split('-');
                     var start = Convert.ToInt32(tab[0]);
                     var end = Convert.ToInt32(tab[1]);
+
+                    if (start > end)
+                    {
+
+                        start = Convert.ToInt32(tab[1]);
+                        end = Convert.ToInt32(tab[0]);
+                    }
+
                     var count = end - start;
 
                     if (count > acceptRange)
@@ -115,8 +123,8 @@ namespace ApiLibrary.Core.Controllers
                     //TODO: Revoir les links (mauvais algo de calcul)
                     string links = $"<{url}?range=0-{count}>; rel=\"first\"," +
                                     $"<{url}?range = {(start - count < 0 ? 0 : start - count)}-{(start - count < 0 ? 0 : start - count) + count}>; rel =\"prev\"," +
-                                    $"<{url}?range = {(end + 1 > total - 1 ? total - 1 : end + 1)}-{(end + count > total - 1 ? total - 1 : end + count - 1)}>; rel =\"next\"," +
-                                    $"<{url}?range = {total - count + 1}-{total - 1}>; rel =\"last\"";
+                                    $"<{url}?range = {(end + 1 > total - 1 ? total - 1 : end + 1)}-{(end + count > total - 1 ? total - 1 : end + count + 1)}>; rel =\"next\"," +
+                                    $"<{url}?range = {total - count }-{total - 1}>; rel =\"last\"";
                     Response.Headers.Add("Link", links);
                     Response.Headers.Add("Content-Range", $"{start}-{end}/{total}");
                 }
