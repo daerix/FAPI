@@ -21,8 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Authentification.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [ApiVersion("1")]
     public class AuthController : BaseController<User, int, UserDbContext>
     {
         public IConfiguration _configuration;
