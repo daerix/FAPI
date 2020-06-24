@@ -12,7 +12,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '3630aee3-f3ca-470b-ade2-7069a2b0038e'
-  imageRepository: 'catalogimage'
+  imageRepository: 'FAPIimages'
   containerRegistry: 'fapiimages.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/src/Dockerfile'
   tag: '$(Build.BuildId)'
