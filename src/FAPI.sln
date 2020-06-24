@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B5B1A2E3-8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiLibrary", "Core\ApiLibrary\ApiLibrary.csproj", "{66436F23-43A4-4A99-B68A-0E929082383B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "CatalogAPI\Catalog.API.csproj", "{29326CDA-D5D5-4210-AC79-602F853B8BCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "Services\Catalog\Catalog.API\Catalog.API.csproj", "{29326CDA-D5D5-4210-AC79-602F853B8BCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
