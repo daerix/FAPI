@@ -1,6 +1,6 @@
 - task: Docker@2
   inputs:
     containerRegistry: 'FAPIimages'
-    repository: 'API'
+    repository: 'fapiimages.azurecr.io'
     command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
+    Dockerfile: './Dockerfile'
