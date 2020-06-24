@@ -32,4 +32,4 @@ stages:
         azureContainerRegistry: '{"loginServer":"fapiimages.azurecr.io", "id" : "/subscriptions/3ba14322-177a-4733-bf54-2676d79bda07/resourceGroups/FAPI/providers/Microsoft.ContainerRegistry/registries/FAPIimages"}'
         dockerComposeFile: '**/docker-compose.yml'
         action: 'Run a Docker Compose command'
-        dockerComposeCommand: 'build'
+        dockerComposeCommand: 'push'
