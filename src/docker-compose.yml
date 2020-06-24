@@ -1,15 +1,15 @@
 version: "3.3"
 services:
-    basket-api:
-      image: fapiimages.azurecr.io/basket
-      build:
-        context: .
-        dockerfile: "./Services/Basket/Basket.API/Dockerfile"
-    # catalog-api:
-    #   image: fapiimages.azurecr.io/catalog
+    # basket-api:
+    #   image: fapiimages.azurecr.io/basket
     #   build:
     #     context: .
-    #     dockerfile: "./Services/Catalog/Catalog.API/Dockerfile"
+    #     dockerfile: "./Services/Basket/Basket.API/Dockerfile"
+    catalog-api:
+      image: fapiimages.azurecr.io/catalog
+      build:
+        context: .
+        dockerfile: "./Services/Catalog/Catalog.API/Dockerfile"
     # authentification-api:
     #   image: fapiimages.azurecr.io/authentification
     #   build:
