@@ -6,10 +6,10 @@ services:
     #     context: .
     #     dockerfile: "./Services/Basket/Basket.API/Dockerfile"
     catalog-api:
-      image: fapiimages.azurecr.io/catalog
       build:
         context: .
         dockerfile: "./Services/Catalog/Catalog.API/Dockerfile"
+      image: fapiimages.azurecr.io/catalog
     # authentification-api:
     #   image: fapiimages.azurecr.io/authentification
     #   build:
