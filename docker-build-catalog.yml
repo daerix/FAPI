@@ -2,3 +2,5 @@
   inputs:
     containerRegistry: 'FAPIimages'
     command: 'login'
+    username: $(username)
+    password: $(password)
