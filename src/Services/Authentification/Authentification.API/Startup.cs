@@ -1,4 +1,4 @@
-using AuthentificationAPI.Data;
+using Authentification.API.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
 using System;
 
-namespace AuthentificationAPI
+namespace Authentification.API
 {
     public class Startup
     {

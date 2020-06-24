@@ -9,8 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ApiLibrary.Core.Controllers;
 using ApiLibrary.Core.Models;
-using AuthentificationAPI.Data;
-using AuthentificationAPI.Models;
+using Authentification.API.Data;
+using Authentification.API.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuthentificationAPI.Controllers
+namespace Authentification.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

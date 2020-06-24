@@ -1,12 +1,12 @@
 ﻿using ApiLibrary.Core.Entities;
-using AuthentificationAPI.Models;
+using Authentification.API.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AuthentificationAPI.Data
+namespace Authentification.API.Data
 {
     public class UserDbContext : BaseDbContext
     {

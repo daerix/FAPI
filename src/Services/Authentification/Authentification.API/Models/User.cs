@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AuthentificationAPI.Models
+namespace Authentification.API.Models
 {
     public class User : BaseModel<int>
     {
