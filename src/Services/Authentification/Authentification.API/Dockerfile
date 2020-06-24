@@ -3,23 +3,26 @@
 #Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
 #For more information, please see https://aka.ms/containercompat
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-nanoserver-1803 AS base
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1803 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Core/AuthentificationAPI/AuthentificationAPI.csproj", "Core/AuthentificationAPI/"]
-RUN dotnet restore "Core/AuthentificationAPI/AuthentificationAPI.csproj"
+COPY "FAPI.sln" "FAPI.sln"
+COPY "Core/ApiLibrary" "Core/ApiLibrary/"
+COPY "Services/Authentification/Authentification.API" "Services/Authentification/Authentification.API/"
+RUN dotnet restore "Services/Authentification/Authentification.API/Authentification.API.csproj"
 COPY . .
-WORKDIR "/src/Core/AuthentificationAPI"
-RUN dotnet build "AuthentificationAPI.csproj" -c Release -o /app/build
+WORKDIR "Services/Authentification/Authentification.API"
+RUN dotnet build "Authentification.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "AuthentificationAPI.csproj" -c Release -o /app/publish
+RUN dotnet publish "Authentification.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AuthentificationAPI.dll"]
+ENTRYPOINT ["dotnet", "Authentification.API.dll"]

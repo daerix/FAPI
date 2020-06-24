@@ -4,3 +4,11 @@ services:
       build:
         context: .
         dockerfile: "./Services/Basket/Basket.API/Dockerfile"
+    catalog-api:
+      build:
+        context: .
+        dockerfile: "./Services/Catalog/Catalog.API/Dockerfile"
+    authentification-api:
+      build:
+        context: .
+        dockerfile: "./Services/Authentification/Authentification.API/Dockerfile"
