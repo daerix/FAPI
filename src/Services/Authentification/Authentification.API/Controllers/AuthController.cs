@@ -36,7 +36,7 @@ namespace Authentification.API.Controllers
             return base.DeleteItemAsync(id);
         }
 
-        public override async Task<ActionResult> GetItemByIdAsync([FromRoute] object id)
+        public override async Task<ActionResult> GetItemByIdAsync([FromRoute] int id, [FromQuery] bool deepFetch = false)
         {
             return await base.GetItemByIdAsync(id);
         }
