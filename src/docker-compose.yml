@@ -1,0 +1,6 @@
+version: "3.3"
+services:
+    basket-api:
+      build:
+        context: .
+        dockerfile: "./Services/Basket/Basket.API/Dockerfile"
