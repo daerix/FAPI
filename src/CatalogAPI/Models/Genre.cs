@@ -11,7 +11,6 @@ namespace CatalogAPI.Models
 
     public class Genre : BaseModel<int>
     {
-        [StringLength(150)]
         [Required(ErrorMessage = "Le Type est obligatoire.")]
         public Type Type { get; set; }
 
