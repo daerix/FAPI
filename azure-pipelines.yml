@@ -1,0 +1,29 @@
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'eb2192d7-0b95-454b-985d-d27627ced596'
+  
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'basketapi'
+        dockerfile: '$(Build.SourcesDirectory)/src/Services/Basket/Basket.API/Dockerfile'
+        containerRegistry: 'fapiimages.azurecr.io'
+        tags: |
+          '$(Build.BuildId)'
