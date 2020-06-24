@@ -4,6 +4,8 @@ using ApiLibrary.Core.Exceptions;
 using ApiLibrary.Core.Extentions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,11 +49,11 @@ namespace ApiLibrary.Core.Controllers
             var sortQueryKey = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
             var fieldQueryKey = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
             var rangeQueryKey = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
-            var propeties = typeof(TModel).GetProperties();
+            var properties = typeof(TModel).GetProperties();
 
             query = query.Where(x => x.DeletedAt == null);
 
-            foreach (var property in propeties)
+            foreach (var property in properties)
             {
                 if (param.TryGetValue(property.Name.ToLower(), out paramsValue) || param.TryGetValue(property.Name, out paramsValue))
                 {
@@ -64,6 +66,14 @@ namespace ApiLibrary.Core.Controllers
                         }
                         query = query.Search(property.Name, values[0]);
                     }
+                    else if (values.Length == 2 && values[0].Contains("[") && values[1].Contains("]"))
+                    {
+                        if (property.PropertyType == typeof(string))
+                        {
+                            throw new ForkException($"The requested fork is not allowed on this type of property ({ property.PropertyType }). Accepted type: Integer, Decimal, DateTime");
+                        }
+                        query = query.Fork(property.Name, values);
+                    } 
                     else
                     {
                         query = query.Filter(property.Name, values);
@@ -96,6 +106,14 @@ namespace ApiLibrary.Core.Controllers
                     var tab = paramsValue.Split('-');
                     var start = Convert.ToInt32(tab[0]);
                     var end = Convert.ToInt32(tab[1]);
+
+                    if (start > end)
+                    {
+
+                        start = Convert.ToInt32(tab[1]);
+                        end = Convert.ToInt32(tab[0]);
+                    }
+
                     var count = end - start;
 
                     if (count > acceptRange)
@@ -108,16 +126,14 @@ namespace ApiLibrary.Core.Controllers
 
                     string url = $"{Request.Scheme}://{Request.Host}{Request.Path}";
 
-                    string links = $"<{url}?range=0-{(end - start)}>; rel=\"first\"," +
-                                    $"<{url}?range = {(start - (end - start) < 0 ? 0 : start - (end - start))}-{(start - (end - start) < 0 ? 0 : start - (end - start)) + (end - start) - 1}>; rel =\"prev\"," +
-                                    $"<{url}?range = {end + 1}-{(end + (end - start) > total - 1 ? total : end + (end - start) - 1)}>; rel =\"next\"," +
-                                    $"<{url}?range = {total - (end - start) + 1}-{total - 1}>; rel =\"last\"";
-                    if (Response != null)
-                    {
-                        Response.Headers.Add("Link", links);
-                        Response.Headers.Add("Content-Range", $"{start}-{end}/{total}");
-                        Response.Headers.Add("Content-Length", $"{(count)}");
-                    }
+
+                    string links = $"<{url}?range=0-{count}>; rel=\"first\"," +
+                                    $"<{url}?range = {(start - count < 0 ? 0 : start - count)}-{(start - count < 0 ? 0 : start - count) + count}>; rel =\"prev\"," +
+                                    $"<{url}?range = {(end + 1 > total - 1 ? total - 1 : end + 1)}-{(end + count > total - 1 ? total - 1 : end + count + 1)}>; rel =\"next\"," +
+                                    $"<{url}?range = {total - count }-{total - 1}>; rel =\"last\"";
+                    Response.Headers.Add("Link", links);
+                    Response.Headers.Add("Content-Range", $"{start}-{end}/{total}");
+
                 }
                 catch (Exception e)
                 {
@@ -160,9 +176,21 @@ namespace ApiLibrary.Core.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(IEnumerable<Object>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] int id)
+        public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] TKey id, [FromQuery] bool deepFetch = false)
         {
-            var item = await _db.FindAsync<TModel>(id);
+            IQueryable<TModel> query = _db.Set<TModel>().AsQueryable<TModel>();
+            query = query.Where(x => x.Id.Equals(id));
+            if (deepFetch)
+            {
+                var fetchProperties = typeof(TModel).GetProperties().Where(x => x.GetCustomAttribute(typeof(ForeignKeyAttribute)) != null);
+                foreach (var property in fetchProperties)
+                {
+                    query = query.Include(property.Name);
+                }
+            }
+
+            var item = await query.FirstAsync();
+
             if (item != null)
             {
                 return Ok(item);
