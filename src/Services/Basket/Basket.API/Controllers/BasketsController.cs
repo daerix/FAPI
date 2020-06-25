@@ -33,7 +33,7 @@ namespace Basket.API.Controllers
                 if (ModelState.IsValid || basket.User == 0)
                 {
                     basket.State = Enums.BasketStates.PENDING;
-                    var basketAlreadyExists = _db.Set<Models.Basket>().Where(x => x.User == basket.User && x.DeletedAt == null);
+                    var basketAlreadyExists = _db.Set<Models.Basket>().Where(x => x.User == basket.User && x.DeletedAt == null).ToList();
                     if (basketAlreadyExists.Count() == 0)
                     {
                         return await base.PostItemAsync(basket);
@@ -42,7 +42,7 @@ namespace Basket.API.Controllers
                 }
                 return BadRequest(ModelState);
             }
-            catch
+            catch (Exception e)
             {
                 return BadRequest();
             }
