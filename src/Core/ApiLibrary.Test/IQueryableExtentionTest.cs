@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
-using ApiLibrary.Core.Extentions;
+using ApiLibrary.Core.Extensions;
 using ApiLibrary.Test.Mocks;
 
 namespace ApiLibrary.Test
