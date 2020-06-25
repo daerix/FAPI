@@ -21,7 +21,7 @@ namespace Basket.Test
             var controller = new BasketsController(_db);
 
             var actionResult = await controller.GetItemsAsync(new Dictionary<string, string>());
-            Assert.Equal((int)HttpStatusCode.OK, (actionResult as ObjectResult).StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, (actionResult.Result as ObjectResult).StatusCode);
         }
     }
 }

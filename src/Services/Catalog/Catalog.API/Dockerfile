@@ -13,7 +13,7 @@ COPY "Core/ApiLibrary" "Core/ApiLibrary/"
 COPY "Services/Catalog/Catalog.API" "Services/Catalog/Catalog.API/"
 RUN dotnet restore "Services/Catalog/Catalog.API/Catalog.API.csproj"
 COPY . .
-WORKDIR "/src/Services/Catalog/Catalog.API"
+WORKDIR "Services/Catalog/Catalog.API"
 RUN dotnet build "Catalog.API.csproj" -c Release -o /app/build
 
 

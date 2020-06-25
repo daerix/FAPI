@@ -12,10 +12,10 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY "FAPI.sln" "FAPI.sln"
 COPY "Core/ApiLibrary" "Core/ApiLibrary/"
-COPY "Services/Basket.API" "Services/Basket.API/"
-RUN dotnet restore "Services/Basket.API/Basket.API.csproj"
+COPY "Services/Basket/Basket.API" "Services/Basket/Basket.API/"
+RUN dotnet restore "Services/Basket/Basket.API/Basket.API.csproj"
 COPY . .
-WORKDIR "Services/Basket.API"
+WORKDIR "Services/Basket/Basket.API"
 RUN dotnet build "Basket.API.csproj" -c Release -o /app/build
 
 FROM build AS publish

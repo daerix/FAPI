@@ -35,13 +35,13 @@ namespace Authentification.API.Controllers
             return base.DeleteItemAsync(id);
         }
 
-        public override async Task<ActionResult> GetItemByIdAsync([FromRoute] int id, [FromQuery] bool deepFetch = false)
+        public override async Task<ActionResult<User>> GetItemByIdAsync([FromRoute] int id, [FromQuery] bool deepFetch = false)
         {
             return await base.GetItemByIdAsync(id);
         }
 
         [Authorize]
-        public override Task<ActionResult> GetItemsAsync([FromQuery] Dictionary<string, string> param)
+        public override Task<ActionResult<IEnumerable<User>>> GetItemsAsync([FromQuery] Dictionary<string, string> param)
         {
             return base.GetItemsAsync(param);
         }
