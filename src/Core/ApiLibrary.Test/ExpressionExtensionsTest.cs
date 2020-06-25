@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ApiLibrary.Core.Extensions;
 using ApiLibrary.Test.Mocks.Models;
-using Xunit;
+using System;
 using System.Linq.Expressions;
-using ApiLibrary.Core.Extensions;
+using Xunit;
 
 namespace ApiLibrary.Test
 {
@@ -17,11 +14,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Decimal");
-<<<<<<< HEAD
-            var value = decimal.Parse("1.1",System.Globalization.NumberStyles.AllowDecimalPoint);
-=======
-            decimal value = 1.1M;
->>>>>>> 1569615159b532c8a6e195d9d7cf1f1ef3172533
+            var value = 1.1M;
 
             var result = property.Constant(value.ToString());
 
@@ -33,7 +26,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Integer");
-            int value = 1;
+            var value = 1;
 
             var result = property.Constant(value.ToString());
 
@@ -45,7 +38,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Date");
-            DateTime value = new DateTime(2000, 8, 25);
+            var value = new DateTime(2000, 8, 25);
 
             var result = property.Constant(value.ToString());
 
@@ -57,7 +50,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "String");
-            string value = "Test";
+            var value = "Test";
 
             var result = property.Constant(value);
 

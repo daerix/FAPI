@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using System.Linq;
-using ApiLibrary.Core.Extensions;
+﻿using ApiLibrary.Core.Extensions;
 using ApiLibrary.Test.Mocks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace ApiLibrary.Test
 {
@@ -33,7 +31,7 @@ namespace ApiLibrary.Test
             Assert.True(result.SequenceEqual(_db.Models.Skip(5).Take(2).ToList()));
         }
 
-         [Fact]
+        [Fact]
         public void empty_when_out_of_range()
         {
             var query = _db.Models.AsQueryable();
@@ -104,7 +102,7 @@ namespace ApiLibrary.Test
             var query = _db.Models.AsQueryable();
             var result = query.Field(new[] { "String", "Integer" }).ToList();
 
-            foreach(dynamic data in result)
+            foreach (dynamic data in result)
             {
                 var dataDictionary = (IDictionary<string, object>)data;
                 Assert.True(dataDictionary.ContainsKey("String"));
@@ -157,7 +155,7 @@ namespace ApiLibrary.Test
         public void argumentexception_when_search_error()
         {
             var query = _db.Models.AsQueryable();
-            Assert.Throws<ArgumentException>(() => query.Search("Toto","Test*").ToList());
+            Assert.Throws<ArgumentException>(() => query.Search("Toto", "Test*").ToList());
         }
 
         [Fact]

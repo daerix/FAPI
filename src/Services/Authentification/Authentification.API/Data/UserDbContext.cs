@@ -1,10 +1,6 @@
 ﻿using ApiLibrary.Core.Entities;
 using Authentification.API.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Authentification.API.Data
 {

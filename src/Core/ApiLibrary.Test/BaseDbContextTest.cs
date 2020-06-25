@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ApiLibrary.Test.Mocks;
+using ApiLibrary.Test.Mocks.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using System.Linq;
-using ApiLibrary.Test.Mocks.Models;
-using ApiLibrary.Test.Mocks;
 
 namespace ApiLibrary.Test
 {

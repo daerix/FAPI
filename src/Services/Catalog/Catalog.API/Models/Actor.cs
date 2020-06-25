@@ -1,15 +1,9 @@
-﻿
-using ApiLibrary.Core.Attributes;
-using ApiLibrary.Core.Entities;
-using System;
-using System.Collections.Generic;
+﻿using ApiLibrary.Core.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Catalog.API.Models
-{ 
+{
     public class Actor : BaseModel<int>
     {
 
