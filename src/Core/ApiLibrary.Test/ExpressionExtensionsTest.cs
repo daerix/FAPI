@@ -17,7 +17,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Decimal");
-            var value = 1.1;
+            var value = decimal.Parse("1.1",System.Globalization.NumberStyles.AllowDecimalPoint);
 
             var result = property.Constant(value.ToString());
 
@@ -43,7 +43,7 @@ namespace ApiLibrary.Test
             var property = Expression.Property(parameter, "Date");
             var value = new DateTime(2000, 8, 25);
 
-            var result = property.Constant("25/08/2000");
+            var result = property.Constant(value.ToString());
 
             Assert.Equal(value.ToString(), result.ToString());
         }
