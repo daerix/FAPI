@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity.SqlServer.Utilities;
 using System.Data.Entity.Utilities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -28,16 +30,10 @@ namespace Authentification.API.Controllers
     public class AuthController : BaseController<User, int, UserDbContext>
     {
         public IConfiguration _configuration;
-        private object context;
 
-        public AuthController(IConfiguration config, UserDbContext context ) : base(context)
+        public AuthController(IConfiguration config, UserDbContext db) : base(db)
         {
             _configuration = config;
-        }
-
-        public AuthController(UserDbContext db) : base(db)
-        {
-            
         }
 
         public override Task<ActionResult> DeleteItemAsync([FromRoute] int id)
@@ -63,17 +59,17 @@ namespace Authentification.API.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromQuery] LogQueryParams login)
+        public async Task<IActionResult> Login([FromBody] User user)
         {
-            if (login.IsPassword && login.IsEmail)
+            if (!string.IsNullOrWhiteSpace(user.Mail) && !string.IsNullOrWhiteSpace(user.Password))
             {
 
-                var model = await _db.Users.Where(x => x.Mail == login.Email).FirstOrDefaultAsync();
+                var model = await _db.Users.Where(x => x.Mail == user.Mail).FirstOrDefaultAsync();
                 
                 
                 if (model != null)
                 {
-                    if (model.Password != HashPassword(login.Password))
+                    if (model.Password != HashPassword(user.Password))
                     {
                         var claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
@@ -108,53 +104,49 @@ namespace Authentification.API.Controllers
 
         [HttpPost]
         [Route("logon")]
-        public async Task<IActionResult> Logon([FromQuery] LogQueryParams log)
+        public async Task<IActionResult> Logon([FromBody] User user)
         {
-            if (log.IsPassword && log.IsEmail)
+            if (!string.IsNullOrWhiteSpace(user.Mail) && !string.IsNullOrWhiteSpace(user.Password))
             {
 
-                var model = await _db.Users.Where(x => x.Mail == log.Email).FirstOrDefaultAsync();
+                var model = await _db.Users.Where(x => x.Mail == user.Mail).FirstOrDefaultAsync();
 
 
                 if (model == null)
                 {
-                    var user = (await PostItemAsync(MapUser(log)) as CreatedResult).Value as User;
-                    var claims = new[] {
+                    user.Password = HashPassword(user.Password);
+                    var userCreated = (await PostItemAsync(user) as CreatedResult).Value as User;
+                    if (userCreated != null)
+                    {
+                        var claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                        new Claim("ID", user.Id.ToString()),
-                        new Claim("FirstName", user.FirstName),
-                        new Claim("LastName", user.LastName),
-                        new Claim("Mail", user.Mail)
+                        new Claim("ID", userCreated.Id.ToString()),
+                        new Claim("FirstName", userCreated.FirstName),
+                        new Claim("LastName", userCreated.LastName),
+                        new Claim("Mail", userCreated.Mail)
                         };
 
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
-                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-                    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+                        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                        return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                    }
+                    return BadRequest("Erreur");
                 }
                 else
                 {
-                    return BadRequest("Invalid credentials");
+                    return BadRequest("Mail déjà utilisé");
                 }
             }
             else
             {
                 return BadRequest();
             }
-        }
-        public User MapUser(LogQueryParams logQuery)
-        {
-            User user = new User();
-            user.LastName = logQuery.LastName;
-            user.FirstName = logQuery.FirstName;
-            user.Mail = logQuery.Email;
-            user.Password = HashPassword(logQuery.Password);
-            return user;
         }
 
         public string HashPassword(string Password)
@@ -173,8 +165,6 @@ namespace Authentification.API.Controllers
             ));
             return hashed;
         }
-
-        
 
         public class LogQueryParams
         {

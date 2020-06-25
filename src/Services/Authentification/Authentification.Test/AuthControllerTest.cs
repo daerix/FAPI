@@ -1,8 +1,9 @@
 using Authentification.API.Controllers;
 using Authentification.API.Models;
 using Authentification.Test.Mocks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.Data.Entity.Core.Objects;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -13,19 +14,73 @@ namespace Authentification.Test
     {
 
         private AuthController controller;
-        [Fact]
-        public async Task Should_Not_Create_If_Basket_Does_Not_Exists()
+        public IConfiguration _configuration;
+
+        public AuthControllerTest(IConfiguration config)
         {
-            /*using (var context = await MockDbContext.GetDbContext())
+            _configuration = config;
+        }
+
+        [Fact]
+        public async Task Should_Not_Create_If_Password_Null()
+        {
+            using (var context = await MockDbContext.GetDbContext())
             {
-                controller = new AuthController(context);
-                var bookingMock = new User()
+                controller = new AuthController(_configuration, context);
+                var userMock = new Authentification.API.Models.User
                 {
-                    Id = 4
+                    Mail = "MailTest@icloud.com"
                 };
-                var actionResult = await controller.PostItemAsync(bookingMock);
-                Assert.Equal((int)HttpStatusCode.BadRequest, (actionResult as ObjectResult).StatusCode);
-            }*/
+                var actionResult = await controller.Logon(userMock);
+                Assert.IsType<BadRequestResult>(actionResult);
+            }
+        }
+
+        [Fact]
+        public async Task Should_Not_Create_If_Mail_Null()
+        {
+            using (var context = await MockDbContext.GetDbContext())
+            {
+                controller = new AuthController(_configuration, context);
+                var userMock = new Authentification.API.Models.User
+                {
+                    Password = "Password"
+                };
+                var actionResult = await controller.Logon(userMock);
+                Assert.IsType<BadRequestResult>(actionResult);
+            }
+        }
+
+        [Fact]
+        public async Task Should_Not_Create_If_User_Exist()
+        {
+            using (var context = await MockDbContext.GetDbContext())
+            {
+                controller = new AuthController(_configuration, context);
+                var userMock = new Authentification.API.Models.User
+                {
+                    Mail = "MailTest@icloud.com",
+                    Password = "Password"
+                };
+                var actionResult = await controller.Logon(userMock);
+                Assert.IsType<BadRequestObjectResult>(actionResult);
+            }
+        }
+
+        [Fact]
+        public async Task Should_Create_User()
+        {
+            using (var context = await MockDbContext.GetDbContext())
+            {
+                controller = new AuthController(_configuration, context);
+                var userMock = new Authentification.API.Models.User
+                {
+                    Mail = "new@icloud.com",
+                    Password = "Password123"
+                };
+                var actionResult = await controller.Logon(userMock);
+                Assert.IsType<BadRequestObjectResult>(actionResult);
+            }
         }
     }
 }
