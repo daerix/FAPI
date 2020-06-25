@@ -28,9 +28,16 @@ namespace Authentification.API.Controllers
     public class AuthController : BaseController<User, int, UserDbContext>
     {
         public IConfiguration _configuration;
+        private object context;
+
         public AuthController(IConfiguration config, UserDbContext context ) : base(context)
         {
             _configuration = config;
+        }
+
+        public AuthController(UserDbContext db) : base(db)
+        {
+            
         }
 
         public override Task<ActionResult> DeleteItemAsync([FromRoute] int id)
