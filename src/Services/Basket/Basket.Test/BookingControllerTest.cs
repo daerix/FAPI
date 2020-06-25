@@ -14,57 +14,67 @@ namespace Basket.Test
 {
     public class BookingControllerTest
     {
-        //private MockDbContext _db = MockDbContext.GetDbContext();
-        //private BookingsController controller;
+        private BookingsController controller;
 
-        //public BookingControllerTest()
-        //{
-        //    controller = new BookingsController(_db);
-        //}
+        public BookingControllerTest()
+        {
+        }
 
-        //[Fact]
-        //public async Task Should_Not_Create_If_Basket_Does_Not_Exists()
-        //{
-        //    var bookingMock = new Booking()
-        //    {
-        //        BasketID = 4
-        //    };
-        //    var actionResult = await controller.PostItemAsync(bookingMock);
-        //    Assert.Equal((int)HttpStatusCode.BadRequest, (actionResult as ObjectResult).StatusCode);
+        [Fact]
+        public async Task Should_Not_Create_If_Basket_Does_Not_Exists()
+        {
+            using (var context = await MockDbContext.GetDbContext())
+            {
+                controller = new BookingsController(context);
+                var bookingMock = new Booking()
+                {
+                    BasketID = 4
+                };
+                var actionResult = await controller.PostItemAsync(bookingMock);
+                Assert.Equal((int)HttpStatusCode.BadRequest, (actionResult as ObjectResult).StatusCode);
+            }
 
-        //}
+        }
 
-        //[Fact]
-        //public async Task Should_Not_Create_If_Booking_Already_Exists()
-        //{
-        //    var dateNow = DateTime.Now;
-        //    var booking = _db.Set<Booking>().FirstOrDefault(x => x.Id == 1);
-        //    booking.BookingDate = dateNow;
-        //    _db.Update(booking);
-        //    await _db.SaveChangesAsync();
-        //    var bookingMock = new Booking
-        //    {
-        //        Id = 1,
-        //        BookingDate = dateNow,
-        //        ProductID = 1
-        //    };
-        //    var actionResult = await controller.PostItemAsync(bookingMock);
-        //    Assert.Equal((int)HttpStatusCode.BadRequest, (actionResult as ObjectResult).StatusCode);
+        [Fact]
+        public async Task Should_Not_Create_If_Booking_Already_Exists()
+        {
+            using (var context = await MockDbContext.GetDbContext())
+            {
+                controller = new BookingsController(context);
+                var dateNow = DateTime.Now;
+                var booking = context.Set<Booking>().FirstOrDefault(x => x.Id == 1);
+                booking.BookingDate = dateNow;
+                context.Update(booking);
+                await context.SaveChangesAsync();
+                var bookingMock = new Booking
+                {
+                    Id = 1,
+                    BookingDate = dateNow,
+                    ProductID = 1
+                };
+                var actionResult = await controller.PostItemAsync(bookingMock);
+                Assert.Equal((int)HttpStatusCode.BadRequest, (actionResult as ObjectResult).StatusCode);
+            }
 
-        //}
+        }
 
-        //[Fact]
-        //public async Task Should_Create_Booking()
-        //{
-        //    var bookingMock = new Booking
-        //    {
-        //        Id = 4,
-        //        ProductID = 3,
-        //        BasketID = 1
-        //    };
-        //    var actionResult = await controller.PostItemAsync(bookingMock);
-        //    Assert.Equal((int)HttpStatusCode.Created, (actionResult as ObjectResult).StatusCode);
+        [Fact]
+        public async Task Should_Create_Booking()
+        {
+            using (var context = await MockDbContext.GetDbContext())
+            {
+                controller = new BookingsController(context);
+                var bookingMock = new Booking
+                {
+                    Id = 4,
+                    ProductID = 4,
+                    BasketID = 1
+                };
+                var actionResult = await controller.PostItemAsync(bookingMock);
+                Assert.Equal((int)HttpStatusCode.Created, (actionResult as ObjectResult).StatusCode);
+            }
 
-        //}
+        }
     }
 }

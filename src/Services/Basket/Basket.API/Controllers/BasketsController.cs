@@ -57,10 +57,10 @@ namespace Basket.API.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Set<Models.Basket>().Update(basket);
-                var price = (decimal) 0;
+                _db.Update<Models.Basket>(basket);
                 if (basket.State == Enums.BasketStates.VALIDATED)
                 {
+                    var price = (decimal)0;
                     var bookingToDelete = _db.Set<Booking>().Where(x => x.BasketID == basket.Id).ToList();
                     foreach (var booking in bookingToDelete)
                     {
@@ -68,10 +68,10 @@ namespace Basket.API.Controllers
                         _db.Remove(booking);
                     }
                     _db.Remove(basket);
+                    SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", price);
                 }
 
                 await _db.SaveChangesAsync();
-                SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", price);
                 return NoContent();
             }
             else

@@ -23,9 +23,12 @@ namespace Basket.Test.Mocks
 
             if (withData)
             {
-                db.Baskets.Add(new Basket.API.Models.Basket { Id = 1, State = API.Enums.BasketStates.PENDING, CreatedAt = DateTime.Now, User = 1 });
-                db.Baskets.Add(new Basket.API.Models.Basket { Id = 2, State = API.Enums.BasketStates.PENDING, CreatedAt = DateTime.Now, User = 2 });
-                db.Baskets.Add(new Basket.API.Models.Basket { Id = 3, State = API.Enums.BasketStates.PENDING, CreatedAt = DateTime.Now, User = 3 });
+                var basket1 = new Basket.API.Models.Basket { Id = 1, State = API.Enums.BasketStates.PENDING, CreatedAt = DateTime.Now, User = 1 };
+                var basket2 = new Basket.API.Models.Basket { Id = 2, State = API.Enums.BasketStates.PENDING, CreatedAt = DateTime.Now, User = 2 };
+                var basket3 = new Basket.API.Models.Basket { Id = 3, State = API.Enums.BasketStates.PENDING, CreatedAt = DateTime.Now, User = 3 };
+                db.Baskets.Add(basket1);
+                db.Baskets.Add(basket2);
+                db.Baskets.Add(basket3);
 
                 db.Bookings.Add(new Booking { Id = 1, BasketID = 2, Price = 90, ProductID = 1});
                 db.Bookings.Add(new Booking { Id = 2, BasketID = 2, Price = 40, ProductID = 2 });

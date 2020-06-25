@@ -66,11 +66,8 @@ namespace Basket.Test
             using (var context = await MockDbContext.GetDbContext())
             {
                 controller = new BasketsController(context);
-                var basketMock = new Basket.API.Models.Basket
-                {
-                    Id = 1,
-                    State = BasketStates.SENT
-                };
+                var basketMock = context.Find<Basket.API.Models.Basket>(1);
+                basketMock.State = BasketStates.SENT;
                 var actionResult = await controller.PutItemAsync(basketMock, 1) as NoContentResult;
 
                 Assert.Equal((int)HttpStatusCode.NoContent, actionResult.StatusCode);
@@ -84,11 +81,8 @@ namespace Basket.Test
             using (var context = await MockDbContext.GetDbContext())
             {
                 controller = new BasketsController(context);
-                var basketMock = new Basket.API.Models.Basket
-                {
-                    Id = 2,
-                    State = BasketStates.VALIDATED
-                };
+                var basketMock = context.Find<Basket.API.Models.Basket>(2);
+                basketMock.State = BasketStates.VALIDATED;
                 var actionResult = await controller.PutItemAsync(basketMock, 2);
                 var basketBookings = context.Set<Booking>().Where(x => x.BasketID == basketMock.Id && x.DeletedAt == null).ToList();
                 Assert.Empty(basketBookings);
