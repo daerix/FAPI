@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ApiLibrary.Core.Exceptions
 {
-    class SearchException : Exception
+    public class SearchException : Exception
     {
         public SearchException(string msg) : base(msg)
         {
