@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ApiLibrary.Core.Exceptions
 {
-    class ForkException : Exception
+    public class ForkException : Exception
     {
         public ForkException(string message) : base(message)
         {
