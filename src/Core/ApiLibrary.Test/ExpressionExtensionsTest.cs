@@ -13,11 +13,15 @@ namespace ApiLibrary.Test
     {
 
         [Fact]
-        public async Task constant_with_decimal()
+        public void constant_with_decimal()
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Decimal");
+<<<<<<< HEAD
             var value = decimal.Parse("1.1",System.Globalization.NumberStyles.AllowDecimalPoint);
+=======
+            decimal value = 1.1M;
+>>>>>>> 1569615159b532c8a6e195d9d7cf1f1ef3172533
 
             var result = property.Constant(value.ToString());
 
@@ -25,11 +29,11 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task constant_with_integer()
+        public void constant_with_integer()
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Integer");
-            var value = 1;
+            int value = 1;
 
             var result = property.Constant(value.ToString());
 
@@ -37,11 +41,11 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task constant_with_datetime()
+        public void constant_with_datetime()
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Date");
-            var value = new DateTime(2000, 8, 25);
+            DateTime value = new DateTime(2000, 8, 25);
 
             var result = property.Constant(value.ToString());
 
@@ -49,18 +53,15 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task constant_with_string()
+        public void constant_with_string()
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "String");
-            var value = "Test";
+            string value = "Test";
 
             var result = property.Constant(value);
 
             Assert.Equal(string.Concat(new[] { "\"", value, "\"" }), result.ToString());
         }
-
-        private Expression ConstantExpression(object value) =>
-            Expression.Constant(value , value.GetType());
     }
 }
