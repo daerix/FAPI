@@ -43,7 +43,7 @@ namespace ApiLibrary.Test
             var property = Expression.Property(parameter, "Date");
             DateTime value = new DateTime(2000, 8, 25);
 
-            var result = property.Constant("25/08/2000");
+            var result = property.Constant(value.ToString());
 
             Assert.Equal(value.ToString(), result.ToString());
         }
