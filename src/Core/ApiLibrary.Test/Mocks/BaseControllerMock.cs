@@ -6,9 +6,9 @@ using ApiLibrary.Test.Mocks.Models;
 
 namespace ApiLibrary.Test.Mocks
 {
-    class BaseControllerMock : BaseController<ModelTest,int,DbContextMock>
+    class BaseControllerMock : BaseController<ModelTest,int,BaseDbContextMock>
     {
-        public BaseControllerMock(DbContextMock db) : base(db)
+        public BaseControllerMock(BaseDbContextMock db) : base(db)
         {
 
         }

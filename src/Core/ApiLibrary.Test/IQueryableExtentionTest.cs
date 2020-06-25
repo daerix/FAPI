@@ -11,7 +11,7 @@ namespace ApiLibrary.Test
 {
     public class IQueryableExtentionTest
     {
-        private static DbContextMock _db = DbContextMock.GetDbContext();
+        private static BaseDbContextMock _db = BaseDbContextMock.GetDbContext();
 
         [Fact]
         public async Task elements_by_range()
@@ -37,6 +37,8 @@ namespace ApiLibrary.Test
         public async Task empty_when_out_of_range()
         {
             var query = _db.Models.AsQueryable();
+
+            var test = query.ToList();
 
             var result = query.Range(7, 8).ToList();
             Assert.Empty(result);
