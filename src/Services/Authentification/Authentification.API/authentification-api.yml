@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentification-api-service
+  labels:
+    app: authentification-api
+spec:
+  ports:
+  - port: 80
+    name: http
+  type: ClusterIP
+  selector:
+    app: authentification-api
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentification-api-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: authentification-api
+  template:
+    metadata:
+      labels:
+        app: authentification-api
+    spec:
+      containers:
+        - name: authentification
+          image: fapiimages.azurecr.io/authentification-api-image:52
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+      
+      imagePullSecrets:
+        - name: fapi-registry

@@ -17,7 +17,11 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Decimal");
+<<<<<<< HEAD
+            var value = decimal.Parse("1.1",System.Globalization.NumberStyles.AllowDecimalPoint);
+=======
             decimal value = 1.1M;
+>>>>>>> 1569615159b532c8a6e195d9d7cf1f1ef3172533
 
             var result = property.Constant(value.ToString());
 
