@@ -33,7 +33,7 @@ namespace Basket.API.Controllers
                 if (ModelState.IsValid || basket.User == 0)
                 {
                     basket.State = Enums.BasketStates.PENDING;
-                    var basketAlreadyExists = _db.Set<Models.Basket>().Where(x => x.User == basket.User && x.DeletedAt == null);
+                    var basketAlreadyExists = _db.Set<Models.Basket>().Where(x => x.User == basket.User && x.DeletedAt == null).ToList();
                     if (basketAlreadyExists.Count() == 0)
                     {
                         return await base.PostItemAsync(basket);
@@ -42,7 +42,7 @@ namespace Basket.API.Controllers
                 }
                 return BadRequest(ModelState);
             }
-            catch
+            catch (Exception e)
             {
                 return BadRequest();
             }
@@ -57,10 +57,10 @@ namespace Basket.API.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Set<Models.Basket>().Update(basket);
-                var price = (decimal) 0;
+                _db.Update<Models.Basket>(basket);
                 if (basket.State == Enums.BasketStates.VALIDATED)
                 {
+                    var price = (decimal)0;
                     var bookingToDelete = _db.Set<Booking>().Where(x => x.BasketID == basket.Id).ToList();
                     foreach (var booking in bookingToDelete)
                     {
@@ -68,10 +68,10 @@ namespace Basket.API.Controllers
                         _db.Remove(booking);
                     }
                     _db.Remove(basket);
+                    SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", price);
                 }
 
                 await _db.SaveChangesAsync();
-                SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", price);
                 return NoContent();
             }
             else
