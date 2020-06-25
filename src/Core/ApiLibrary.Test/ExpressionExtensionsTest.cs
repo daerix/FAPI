@@ -13,7 +13,7 @@ namespace ApiLibrary.Test
     {
 
         [Fact]
-        public async Task constant_with_decimal()
+        public void constant_with_decimal()
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Decimal");
@@ -25,7 +25,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task constant_with_integer()
+        public void constant_with_integer()
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Integer");
@@ -37,7 +37,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task constant_with_datetime()
+        public void constant_with_datetime()
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Date");
@@ -49,7 +49,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task constant_with_string()
+        public void constant_with_string()
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "String");
@@ -59,8 +59,5 @@ namespace ApiLibrary.Test
 
             Assert.Equal(string.Concat(new[] { "\"", value, "\"" }), result.ToString());
         }
-
-        private Expression ConstantExpression(object value) =>
-            Expression.Constant(value , value.GetType());
     }
 }

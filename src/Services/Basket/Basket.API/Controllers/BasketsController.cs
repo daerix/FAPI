@@ -44,7 +44,7 @@ namespace Basket.API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 

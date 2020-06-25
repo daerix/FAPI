@@ -14,7 +14,7 @@ namespace ApiLibrary.Test
         private static BaseDbContextMock _db = BaseDbContextMock.GetDbContext();
 
         [Fact]
-        public async Task elements_by_range()
+        public void elements_by_range()
         {
             var query = _db.Models.AsQueryable();
 
@@ -24,7 +24,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task one_element_when_limit_of_range()
+        public void one_element_when_limit_of_range()
         {
             var query = _db.Models.AsQueryable();
 
@@ -34,7 +34,7 @@ namespace ApiLibrary.Test
         }
 
          [Fact]
-        public async Task empty_when_out_of_range()
+        public void empty_when_out_of_range()
         {
             var query = _db.Models.AsQueryable();
 
@@ -45,7 +45,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task sorted_elements_once()
+        public void sorted_elements_once()
         {
             var query = _db.Models.AsQueryable();
 
@@ -54,7 +54,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task sorted_elements_once_by_descending()
+        public void sorted_elements_once_by_descending()
         {
             var query = _db.Models.AsQueryable();
 
@@ -63,7 +63,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_sorted_twice()
+        public void elements_sorted_twice()
         {
             var query = _db.Models.AsQueryable();
 
@@ -72,7 +72,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_sorted_twice_by_descending()
+        public void elements_sorted_twice_by_descending()
         {
             var query = _db.Models.AsQueryable();
 
@@ -81,7 +81,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_sorted_twice_by_both()
+        public void elements_sorted_twice_by_both()
         {
             var query = _db.Models.AsQueryable();
 
@@ -90,7 +90,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task argumentexception_when_sort_error()
+        public void argumentexception_when_sort_error()
         {
             var query = _db.Models.AsQueryable();
             Assert.Throws<ArgumentException>(() => query.Sort(new[] { "Toto" }).ToList());
@@ -98,7 +98,7 @@ namespace ApiLibrary.Test
 
 
         [Fact]
-        public async Task elements_with_specific_fields()
+        public void elements_with_specific_fields()
         {
 
             var query = _db.Models.AsQueryable();
@@ -117,14 +117,14 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task argumentexception_when_specific_fields_error()
+        public void argumentexception_when_specific_fields_error()
         {
             var query = _db.Models.AsQueryable();
             Assert.Throws<ArgumentException>(() => query.Field(new[] { "Toto" }).ToList());
         }
 
         [Fact]
-        public async Task elements_when_search_start_with_text()
+        public void elements_when_search_start_with_text()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Search("String", "String*").ToList();
@@ -134,7 +134,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_when_search_end_with_text()
+        public void elements_when_search_end_with_text()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Search("String", "*1").ToList();
@@ -144,7 +144,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_when_search_contains_text()
+        public void elements_when_search_contains_text()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Search("String", "*Test*").ToList();
@@ -154,14 +154,14 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task argumentexception_when_search_error()
+        public void argumentexception_when_search_error()
         {
             var query = _db.Models.AsQueryable();
             Assert.Throws<ArgumentException>(() => query.Search("Toto","Test*").ToList());
         }
 
         [Fact]
-        public async Task elements_when_filter_success()
+        public void elements_when_filter_success()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Filter("Integer", new[] { "1" }).ToList();
@@ -171,14 +171,14 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task argumentexception_when_filter_error()
+        public void argumentexception_when_filter_error()
         {
             var query = _db.Models.AsQueryable();
             Assert.Throws<ArgumentException>(() => query.Filter("Toto", new[] { "Test" }).ToList());
         }
 
         [Fact]
-        public async Task elements_when_fork_contains_number()
+        public void elements_when_fork_contains_number()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Fork("Integer", new[] { "2", "3" }).ToList();
@@ -188,7 +188,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_when_fork_start_with_number()
+        public void elements_when_fork_start_with_number()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Fork("Integer", new[] { "1", "" }).ToList();
@@ -198,7 +198,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_when_fork_end_with_number()
+        public void elements_when_fork_end_with_number()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Fork("Integer", new[] { "", "2" }).ToList();
@@ -208,7 +208,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_when_fork_contains_date()
+        public void elements_when_fork_contains_date()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Fork("Date", new[] { "02/02/0002", "03/03/0003" }).ToList();
@@ -218,7 +218,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task elements_when_fork_start_with_date()
+        public void elements_when_fork_start_with_date()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Fork("Date", new[] { "01/01/0001", "" }).ToList();
@@ -226,11 +226,10 @@ namespace ApiLibrary.Test
             Assert.Equal(6, result.Count());
             Assert.True(result.SequenceEqual(query.Where(x => x.Date >= new DateTime(1, 1, 1)).ToList()));
 
-
         }
 
         [Fact]
-        public async Task elements_when_fork_end_with_date()
+        public void elements_when_fork_end_with_date()
         {
             var query = _db.Models.AsQueryable();
             var result = query.Fork("Date", new[] { "", "02/02/0002" }).ToList();
@@ -240,7 +239,7 @@ namespace ApiLibrary.Test
         }
 
         [Fact]
-        public async Task argumentexception_when_fork_error()
+        public void argumentexception_when_fork_error()
         {
             var query = _db.Models.AsQueryable();
             Assert.Throws<ArgumentException>(() => query.Fork("Toto", new[] { "Test" }).ToList());
