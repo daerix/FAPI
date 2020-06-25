@@ -55,29 +55,36 @@ namespace ApiLibrary.Core.Controllers
 
             foreach (var property in properties)
             {
-                if (param.TryGetValue(property.Name.ToLower(), out paramsValue) || param.TryGetValue(property.Name, out paramsValue))
+                try
                 {
-                    var values = paramsValue.Split(',');
-                    if (values.Length == 1 && values[0].Contains("*"))
+                    if (param.TryGetValue(property.Name.ToLower(), out paramsValue) || param.TryGetValue(property.Name, out paramsValue))
                     {
-                        if (property.PropertyType != typeof(string))
+                        var values = paramsValue.Split(',');
+                        if (values.Length == 1 && values[0].Contains("*"))
                         {
-                            throw new SearchException($"The requested research is not allowed on this type of property ({ property.PropertyType }). Accepted type: String");
+                            if (property.PropertyType != typeof(string))
+                            {
+                                throw new SearchException($"The requested research is not allowed on this type of property ({ property.PropertyType }). Accepted type: String");
+                            }
+                            query = query.Search(property.Name, values[0]);
                         }
-                        query = query.Search(property.Name, values[0]);
-                    }
-                    else if (values.Length == 2 && values[0].Contains("[") && values[1].Contains("]"))
-                    {
-                        if (property.PropertyType == typeof(string))
+                        else if (values.Length == 2 && values[0].Contains("[") && values[1].Contains("]"))
                         {
-                            throw new ForkException($"The requested fork is not allowed on this type of property ({ property.PropertyType }). Accepted type: Integer, Decimal, DateTime");
+                            if (property.PropertyType == typeof(string))
+                            {
+                                throw new ForkException($"The requested fork is not allowed on this type of property ({ property.PropertyType }). Accepted type: Integer, Decimal, DateTime");
+                            }
+                            query = query.Fork(property.Name, values);
                         }
-                        query = query.Fork(property.Name, values);
-                    } 
-                    else
-                    {
-                        query = query.Filter(property.Name, values);
+                        else
+                        {
+                            query = query.Filter(property.Name, values);
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
                 }
             }
 
@@ -109,9 +116,9 @@ namespace ApiLibrary.Core.Controllers
 
                     if (start > end)
                     {
-
-                        start = Convert.ToInt32(tab[1]);
-                        end = Convert.ToInt32(tab[0]);
+                        var temp = start;
+                        start = end;
+                        end = temp;
                     }
 
                     var count = end - start;
@@ -137,7 +144,7 @@ namespace ApiLibrary.Core.Controllers
                 }
                 catch (Exception e)
                 {
-                    return BadRequest(e.Message);
+                    return BadRequest(e);
                 }
             }
 
@@ -189,10 +196,9 @@ namespace ApiLibrary.Core.Controllers
                 }
             }
 
-            var item = await query.FirstAsync();
-
-            if (item != null)
+            if (query.Count() != 0)
             {
+                var item = await query.FirstAsync();
                 return Ok(item);
             }
             return NotFound();
@@ -217,7 +223,7 @@ namespace ApiLibrary.Core.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public virtual async Task<ActionResult> PutItemAsync([FromBody]TModel item, [FromRoute] TKey id)
         {
-            if (id.Equals(item.Id))
+            if (!id.Equals(item.Id))
             {
                 return BadRequest();
             }
@@ -241,6 +247,7 @@ namespace ApiLibrary.Core.Controllers
             {
                 _db.Remove<TModel>(item);
                 await _db.SaveChangesAsync();
+                return Ok();
             }
             return NotFound();
         }
