@@ -9,7 +9,7 @@ using ApiLibrary.Test.Mocks;
 
 namespace ApiLibrary.Test
 {
-    public class IQueryableExtentionTest
+    public class IQueryableExtensionsTest
     {
         private static BaseDbContextMock _db = BaseDbContextMock.GetDbContext();
 
