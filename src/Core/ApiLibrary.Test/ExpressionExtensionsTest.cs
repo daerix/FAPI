@@ -17,7 +17,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Decimal");
-            var value = 1.1;
+            decimal value = 1.1M;
 
             var result = property.Constant(value.ToString());
 
@@ -29,7 +29,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Integer");
-            var value = 1;
+            int value = 1;
 
             var result = property.Constant(value.ToString());
 
@@ -41,7 +41,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "Date");
-            var value = new DateTime(2000, 8, 25);
+            DateTime value = new DateTime(2000, 8, 25);
 
             var result = property.Constant("25/08/2000");
 
@@ -53,7 +53,7 @@ namespace ApiLibrary.Test
         {
             var parameter = Expression.Parameter(typeof(ModelTest), "x");
             var property = Expression.Property(parameter, "String");
-            var value = "Test";
+            string value = "Test";
 
             var result = property.Constant(value);
 
