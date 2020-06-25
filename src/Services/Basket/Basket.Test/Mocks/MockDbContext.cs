@@ -16,9 +16,9 @@ namespace Basket.Test.Mocks
         {
         }
 
-        public static MockDbContext GetDbContext(bool withData = true)
+        public async static Task<MockDbContext> GetDbContext(bool withData = true)
         {
-            var  options = new DbContextOptionsBuilder().UseInMemoryDatabase("dbtest").Options;
+            var  options = new DbContextOptionsBuilder().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
             var db = new MockDbContext(options);
 
             if (withData)
@@ -27,27 +27,13 @@ namespace Basket.Test.Mocks
                 db.Baskets.Add(new Basket.API.Models.Basket { Id = 2, State = API.Enums.BasketStates.PENDING, CreatedAt = DateTime.Now, User = 2 });
                 db.Baskets.Add(new Basket.API.Models.Basket { Id = 3, State = API.Enums.BasketStates.PENDING, CreatedAt = DateTime.Now, User = 3 });
 
-                db.Bookings.Add(new Booking { Id = 1, BasketID = 1, Price = 90, ProductID = 1});
-                db.Bookings.Add(new Booking { Id = 2, BasketID = 1, Price = 40, ProductID = 2 });
-                db.Bookings.Add(new Booking { Id = 3, BasketID = 2, Price = 90, ProductID = 1 });
-                db.SaveChangesAsync();
+                db.Bookings.Add(new Booking { Id = 1, BasketID = 2, Price = 90, ProductID = 1});
+                db.Bookings.Add(new Booking { Id = 2, BasketID = 2, Price = 40, ProductID = 2 });
+                db.Bookings.Add(new Booking { Id = 3, BasketID = 1, Price = 90, ProductID = 3 });
+                await db.SaveChangesAsync();
             }
 
             return db;
-        }
-
-        public override EntityEntry<T> Update<T>(T entity)
-        {
-            return null;
-        }
-
-        public override EntityEntry<TEntity> Remove<TEntity>(TEntity entity)
-        {
-            if (entity.GetType() == typeof(Basket.API.Models.Basket))
-            {
-                return null;
-            }
-            return base.Remove(entity);
         }
     }
 }
