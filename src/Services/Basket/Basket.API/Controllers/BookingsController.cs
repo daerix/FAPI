@@ -1,6 +1,7 @@
 ﻿using ApiLibrary.Core.Controllers;
 using Basket.API.Data;
 using Basket.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Basket.API.Controllers
 {
+    [Authorize]
     [ApiVersion("1")]
     public class BookingsController : BaseController<Booking, int, BasketDbContext>
     {

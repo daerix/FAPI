@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Authentification.Test
 {
-    public class UnitTest1
+    public class AuthControllerTest
     {
         [Fact]
         public void Test1()
