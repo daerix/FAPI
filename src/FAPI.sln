@@ -27,8 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{7C85
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentification", "Authentification", "{C26D039C-4A65-46F6-8EA8-E9C0CB51ADEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiLibrary.Test", "Core\ApiLibrary.Test\ApiLibrary.Test.csproj", "{6B559A9C-67C6-4625-A120-8B48501E1288}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,10 +52,6 @@ Global
 		{29326CDA-D5D5-4210-AC79-602F853B8BCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29326CDA-D5D5-4210-AC79-602F853B8BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29326CDA-D5D5-4210-AC79-602F853B8BCC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B559A9C-67C6-4625-A120-8B48501E1288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B559A9C-67C6-4625-A120-8B48501E1288}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B559A9C-67C6-4625-A120-8B48501E1288}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B559A9C-67C6-4625-A120-8B48501E1288}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,7 +67,6 @@ Global
 		{29326CDA-D5D5-4210-AC79-602F853B8BCC} = {7C85802D-7EF2-4324-8A8D-A49393FEA969}
 		{7C85802D-7EF2-4324-8A8D-A49393FEA969} = {8931FA3C-B1E3-4D31-A0D6-380128C99D27}
 		{C26D039C-4A65-46F6-8EA8-E9C0CB51ADEF} = {8931FA3C-B1E3-4D31-A0D6-380128C99D27}
-		{6B559A9C-67C6-4625-A120-8B48501E1288} = {B5B1A2E3-850C-4F85-9278-D771EF1F9993}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49A8A69C-F641-4E22-BDB0-653C86E442A7}
