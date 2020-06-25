@@ -34,8 +34,8 @@ namespace Authentification.API
                 options.Cookie.IsEssential = true;
             });
             services.AddControllers();
-            services.AddDbContext<UserDbContext>(b =>
-                  b.UseSqlServer(Configuration.GetConnectionString("UserConnection"))
+            services.AddDbContext<UserDbContext>(options =>
+                  options.UseSqlServer(Configuration.GetConnectionString("UserConnection"))
             );
             services.AddSwaggerGen(c =>
             {
