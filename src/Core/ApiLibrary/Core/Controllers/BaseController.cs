@@ -41,7 +41,7 @@ namespace ApiLibrary.Core.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         //TODO: Revoir QeryParams!
-        public virtual async Task<ActionResult> GetItemsAsync([FromQuery] Dictionary<string, string> param)
+        public virtual async Task<ActionResult<IEnumerable<TModel>>> GetItemsAsync([FromQuery] Dictionary<string, string> param)
         {
             string paramsValue;
             IQueryable<TModel> query = _db.Set<TModel>().AsQueryable<TModel>();
@@ -176,7 +176,7 @@ namespace ApiLibrary.Core.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(IEnumerable<Object>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public virtual async Task<ActionResult> GetItemByIdAsync([FromRoute] TKey id, [FromQuery] bool deepFetch = false)
+        public virtual async Task<ActionResult<TModel>> GetItemByIdAsync([FromRoute] TKey id, [FromQuery] bool deepFetch = false)
         {
             IQueryable<TModel> query = _db.Set<TModel>().AsQueryable<TModel>();
             query = query.Where(x => x.Id.Equals(id));
