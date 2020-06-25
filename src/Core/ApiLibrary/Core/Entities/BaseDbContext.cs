@@ -52,7 +52,12 @@ namespace ApiLibrary.Core.Entities
 
         private void AddTracking()
         {
-            var entries =  ChangeTracker.Entries().Where(x => x.Entity is BaseEntity && (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
+            var entries =  ChangeTracker.Entries().Where(x => 
+            x.Entity is BaseEntity 
+            && (x.State == EntityState.Added 
+            || x.State == EntityState.Modified 
+            || x.State == EntityState.Deleted));
+
             foreach (var item in entries)
             {
                 switch (item.State)

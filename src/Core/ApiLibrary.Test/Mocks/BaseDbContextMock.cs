@@ -9,13 +9,11 @@ namespace ApiLibrary.Test.Mocks
 {
     public class BaseDbContextMock : BaseDbContext
     {
-        private static BaseDbContextMock _dbContextMock;
-
         public BaseDbContextMock(DbContextOptions options) : base(options)
         {
         }
 
-         public DbSet<ModelTest> Models { get; set; }
+        public DbSet<ModelTest> Models { get; set; }
         public DbSet<ParentModelTest> ParentModels { get; set; }
 
         public static BaseDbContextMock GetDbContext(bool withData = true)

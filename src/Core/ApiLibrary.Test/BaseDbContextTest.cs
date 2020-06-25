@@ -1,0 +1,69 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using Xunit;
+using System.Linq;
+using ApiLibrary.Test.Mocks.Models;
+using ApiLibrary.Test.Mocks;
+
+namespace ApiLibrary.Test
+{
+    public class BaseDbContextTest
+    {
+
+        [Fact]
+        public async Task create_element_check_createAt_value()
+        {
+            var db = BaseDbContextMock.GetDbContext();
+
+            db.Add(new ModelTest
+            {
+                String = "String11",
+                Integer = 1,
+                Double = 1.1,
+                Decimal = 1.1M,
+                Date = new DateTime(1, 1, 1),
+                ParentModelId = 5
+            });
+
+            db.SaveChanges();
+
+            var item = await db.Models.Where(x => x.String == "String11").FirstAsync();
+
+            Assert.NotNull(item.CreatedAt);
+            Assert.NotNull(item.UpdatedAt);
+            Assert.Null(item.DeletedAt);
+
+        }
+
+        [Fact]
+        public async Task update_element_check_updateAt_value()
+        {
+            var db = BaseDbContextMock.GetDbContext();
+
+            var item = await db.Models.Where(x => x.String == "String1").FirstAsync();
+            var oldUpdatedDate = item.UpdatedAt;
+
+            db.Update<ModelTest>(item);
+            await db.SaveChangesAsync();
+
+            Assert.NotNull(item.UpdatedAt);
+            Assert.NotEqual(oldUpdatedDate, item.UpdatedAt);
+            Assert.Null(item.DeletedAt);
+
+        }
+
+        [Fact]
+        public async Task delete_element_check_updateAt_value()
+        {
+            var db = BaseDbContextMock.GetDbContext();
+            var item = await db.Models.Where(x => x.String == "String1").FirstAsync();
+
+            db.Remove<ModelTest>(item);
+            await db.SaveChangesAsync();
+
+            Assert.NotNull(item.UpdatedAt);
+            Assert.NotNull(item.DeletedAt);
+        }
+    }
+}
