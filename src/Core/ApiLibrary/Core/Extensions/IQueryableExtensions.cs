@@ -9,9 +9,9 @@ using System.Linq.Expressions;
 using System.ComponentModel;
 using System.Dynamic;
 
-namespace ApiLibrary.Core.Extentions
+namespace ApiLibrary.Core.Extensions
 {
-    public static class IQueryableExtention
+    public static class IQueryableExtensions
     {
         public static IQueryable<T> Pagination<T>(this IQueryable<T> query, long from, long to)
         {

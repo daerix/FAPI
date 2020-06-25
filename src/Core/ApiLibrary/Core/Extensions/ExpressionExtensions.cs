@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.ComponentModel;
 
-namespace ApiLibrary.Core.Extentions
+namespace ApiLibrary.Core.Extensions
 {
-    public static class ExpressionExtention
+    public static class ExpressionExtensions
     {
         public static Expression AndCondition(this Expression expression, Expression newExpression) =>
             expression is null ? newExpression : Expression.And(expression, newExpression);

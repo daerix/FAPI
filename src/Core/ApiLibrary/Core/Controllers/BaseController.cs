@@ -1,7 +1,7 @@
 ﻿using ApiLibrary.Core.Attributes;
 using ApiLibrary.Core.Entities;
 using ApiLibrary.Core.Exceptions;
-using ApiLibrary.Core.Extentions;
+using ApiLibrary.Core.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
