@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: catalog
-          image: fapiimages.azurecr.io/catalog-api-image:52
+          image: fapiimages.azurecr.io/catalog-api-image:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
