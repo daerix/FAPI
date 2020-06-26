@@ -4,9 +4,13 @@ using Basket.API.Models;
 using Mailjet.Client;
 using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -16,6 +20,7 @@ namespace Basket.API.Controllers
     public class BasketsController : BaseController<Models.Basket, int, BasketDbContext>
     {
         private Timer aTimer;
+        private string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGQVBJQXV0aGVudGlmaWNhdGlvbkFjY2Vzc1Rva2VuIiwianRpIjoiOTNjMzljNzctMGJhMC00Y2YyLTgxOTYtMjIwOWU2ZjEyNWM0IiwiaWF0IjoiMjYvMDYvMjAyMCAwOTozODo1NCIsIklEIjoiMjAiLCJGaXJzdE5hbWUiOiJoaCIsIkxhc3ROYW1lIjoiaGhoIiwiTWFpbCI6ImhvcGxmYSIsImV4cCI6MTU5MzI1MDczNCwiaXNzIjoiRkFQSUF1dGhlbnRpZmljYXRpb25BUEkiLCJhdWQiOiJGQVBJQXV0aGVudGlmaWNhdGlvblBvc3RtYW5DbGllbnQifQ.gSukXwX729296DkUu9rAsHZ8BndsAFyjaGGR8YUqKSo";
 
         public BasketsController(BasketDbContext db) : base(db)
         {
@@ -64,7 +69,9 @@ namespace Basket.API.Controllers
                         _db.Remove(booking);
                     }
                     _db.Remove(basket);
-                    SendValidationMailAsync(basket, "virgilesassano@gmail.com", "Virgile", "SASSANO", price);
+                    var token = GetToken();
+                    token = token.Replace("Bearer ", "");
+                    SendValidationMailAsync(basket, GetClaim(token, "Mail"), GetClaim(token, "LastName"), GetClaim(token, "FirstName"), price);
                 }
 
                 await _db.SaveChangesAsync();
@@ -114,6 +121,21 @@ namespace Basket.API.Controllers
             //aTimer.Start();
         }
 
+        public string GetClaim(string token, string claimType)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+
+            var stringClaimValue = securityToken.Claims.First(claim => claim.Type == claimType).Value;
+            return stringClaimValue;
+        }
+
+        public string GetToken()
+        {
+            var token = (string)Request.Headers[HeaderNames.Authorization] as string;
+            token = token.Replace("Bearer ", "");
+            return token;
+        }
 
         private async void SendValidationMailAsync(Models.Basket basket, string userEmail, string firstName, string lastName, decimal totalPrice)
         {
