@@ -1,11 +1,6 @@
-﻿using Authentification.API.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Authentification.Test.Mocks
+﻿namespace Authentification.Test.Mocks
 {
-    public class UserMock: Authentification.API.Models.User
+    public class UserMock : Authentification.API.Models.User
     {
     }
 }

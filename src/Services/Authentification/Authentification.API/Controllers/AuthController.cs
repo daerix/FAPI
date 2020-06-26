@@ -4,7 +4,6 @@ using Authentification.API.Data;
 using Authentification.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,9 +16,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Authentification.API;
-using System.Configuration;
-using System.Collections.Specialized;
 
 namespace Authentification.API.Controllers
 {
@@ -62,8 +58,8 @@ namespace Authentification.API.Controllers
             {
 
                 var model = await _db.Users.Where(x => x.Mail == user.Mail).FirstOrDefaultAsync();
-                
-                
+
+
                 if (model != null)
                 {
                     if (model.Password != HashPassword(user.Password))

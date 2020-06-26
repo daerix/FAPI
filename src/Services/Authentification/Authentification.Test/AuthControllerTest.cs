@@ -1,16 +1,8 @@
-using Authentification.API.Controllers;
-using Authentification.API.Models;
 using Authentification.Test.Mocks;
 using Authentification.Test.Mocks.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
-using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -91,7 +83,7 @@ namespace Authentification.Test
                 var userMock = new Authentification.API.Models.User
                 {
                     Mail = "new@icloud.com",
-                    Password = "Password123", 
+                    Password = "Password123",
                 };
                 var actionResult = await controller.Logon(userMock);
                 Assert.IsType<OkObjectResult>(actionResult);

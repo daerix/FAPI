@@ -1,5 +1,5 @@
-﻿using Xunit;
-using ApiLibrary.Core.Models;
+﻿using ApiLibrary.Core.Models;
+using Xunit;
 
 namespace ApiLibrary.Test
 {
@@ -53,7 +53,7 @@ namespace ApiLibrary.Test
 
         [Fact]
         public void isfield_if_exists_to_lower()
-        { 
+        {
             Assert.True(lowerExistsParam.IsSelect);
         }
 
@@ -84,7 +84,7 @@ namespace ApiLibrary.Test
         [Fact]
         public void range_if_exists()
         {
-            Assert.Equal("2-3",existsParam.Range);
+            Assert.Equal("2-3", existsParam.Range);
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace ApiLibrary.Test
         [Fact]
         public void property_if_exists()
         {
-            Assert.Equal(3,existsParam.Properties.Count);
+            Assert.Equal(3, existsParam.Properties.Count);
             Assert.False(existsParam.Properties.ContainsKey("Sort"));
             Assert.False(existsParam.Properties.ContainsKey("Field"));
             Assert.False(existsParam.Properties.ContainsKey("Range"));

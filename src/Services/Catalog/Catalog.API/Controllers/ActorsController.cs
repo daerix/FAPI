@@ -1,11 +1,11 @@
 ﻿using ApiLibrary.Core.Controllers;
+using ApiLibrary.Core.Models;
 using Catalog.API.Data;
 using Catalog.API.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using ApiLibrary.Core.Models;
+using System.Threading.Tasks;
 
 namespace Catalog.API.Controllers
 {
