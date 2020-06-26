@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ApiLibrary.Core.Entities;
+﻿using ApiLibrary.Core.Controllers;
 using Catalog.API.Data;
 using Catalog.API.Models;
-using ApiLibrary.Core.Controllers;
-using ApiLibrary.Core.Attributes;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers
 {
@@ -23,7 +14,7 @@ namespace Catalog.API.Controllers
         {
         }
 
-       
+
 
     }
 }

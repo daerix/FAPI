@@ -5,13 +5,9 @@ using Mailjet.Client;
 using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -21,7 +17,7 @@ namespace Basket.API.Controllers
     [ApiVersion("1")]
     public class BasketsController : BaseController<Models.Basket, int, BasketDbContext>
     {
-        private System.Timers.Timer aTimer;
+        private Timer aTimer;
 
         public BasketsController(BasketDbContext db) : base(db)
         {
@@ -48,7 +44,7 @@ namespace Basket.API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
         [Authorize]
@@ -68,7 +64,7 @@ namespace Basket.API.Controllers
                     var bookingToDelete = _db.Set<Booking>().Where(x => x.BasketID == basket.Id).ToList();
                     foreach (var booking in bookingToDelete)
                     {
-                        price += (decimal) booking.Price;
+                        price += (decimal)booking.Price;
                         _db.Remove(booking);
                     }
                     _db.Remove(basket);
@@ -122,10 +118,10 @@ namespace Basket.API.Controllers
             //aTimer.Start();
         }
 
-        
+
         private async void SendValidationMailAsync(Models.Basket basket, string userEmail, string firstName, string lastName, decimal totalPrice)
         {
-            MailjetClient client = new MailjetClient("4f32aface96993dabdc99274cac8f363","d4349dcf478531808acefc8d681f3ee5")
+            MailjetClient client = new MailjetClient("4f32aface96993dabdc99274cac8f363", "d4349dcf478531808acefc8d681f3ee5")
             {
                 Version = Mailjet.Client.ApiVersion.V3_1,
             };
@@ -148,7 +144,7 @@ namespace Basket.API.Controllers
                  {"TemplateLanguage", true},
                  {"Subject", "FAPI Validated Command"},
                  {"Variables", new JObject {
-                  {"nom", "SASSANO\"]][[data: prénom:\"Virgile\"]]</ title >< !--[if !mso]>< !---->< meta http - equiv = \"X-UA-Compatible\" content = \"IE=edge\" >< !--< ![endif]-- >< meta http - equiv = \"Content-Type\" content = \"text/html; charset=UTF-8\" >< meta name = \"viewport\" content = \"width=device-width,initial-scale=1\" >< style type = \"text/css"}, 
+                  {"nom", "SASSANO\"]][[data: prénom:\"Virgile\"]]</ title >< !--[if !mso]>< !---->< meta http - equiv = \"X-UA-Compatible\" content = \"IE=edge\" >< !--< ![endif]-- >< meta http - equiv = \"Content-Type\" content = \"text/html; charset=UTF-8\" >< meta name = \"viewport\" content = \"width=device-width,initial-scale=1\" >< style type = \"text/css"},
 {"firstname", firstName},
 {"total_price", totalPrice},
 {"order_date", basket.DeletedAt},

@@ -1,21 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity.SqlServer.Utilities;
-using System.Data.Entity.Utilities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using ApiLibrary.Core.Controllers;
+﻿using ApiLibrary.Core.Controllers;
 using ApiLibrary.Core.Models;
 using Authentification.API.Data;
 using Authentification.API.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Authentification.API.Controllers
 {
@@ -30,8 +23,7 @@ namespace Authentification.API.Controllers
     public class AuthController : BaseController<User, int, UserDbContext>
     {
         public IConfiguration _configuration;
-
-        public AuthController(IConfiguration config, UserDbContext db) : base(db)
+        public AuthController(IConfiguration config, UserDbContext context) : base(context)
         {
             _configuration = config;
         }
@@ -52,7 +44,7 @@ namespace Authentification.API.Controllers
         }
 
         [Authorize]
-        public override Task<ActionResult<IEnumerable<User>>> GetItemsAsync([FromQuery] Dictionary<string, string> param)
+        public override Task<ActionResult<IEnumerable<User>>> GetItemsAsync([FromQuery] QueryParams param)
         {
             return base.GetItemsAsync(param);
         }

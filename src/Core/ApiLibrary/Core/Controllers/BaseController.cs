@@ -2,12 +2,12 @@
 using ApiLibrary.Core.Entities;
 using ApiLibrary.Core.Exceptions;
 using ApiLibrary.Core.Extensions;
+using ApiLibrary.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -25,11 +25,8 @@ namespace ApiLibrary.Core.Controllers
     public abstract class BaseController<TModel, TKey, TContext> : ControllerBase
         where TContext : BaseDbContext
         where TModel : BaseModel<TKey>
-    { 
+    {
         protected readonly TContext _db;
-        public string sortKey = "sort";
-        public string rangeKey = "range";
-        public string fieldKey = "field";
 
         public BaseController(TContext db)
         {
@@ -41,25 +38,21 @@ namespace ApiLibrary.Core.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         //TODO: Revoir QeryParams!
-        public virtual async Task<ActionResult<IEnumerable<TModel>>> GetItemsAsync([FromQuery] Dictionary<string, string> param)
+        public virtual async Task<ActionResult<IEnumerable<TModel>>> GetItemsAsync([FromQuery] QueryParams param)
         {
-            string paramsValue;
             IQueryable<TModel> query = _db.Set<TModel>().AsQueryable<TModel>();
             var acceptRange = this.GetType().GetCustomAttribute<AcceptRangesAttribute>().AcceptRange;
-            var sortQueryKey = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
-            var fieldQueryKey = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
-            var rangeQueryKey = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
-            var properties = typeof(TModel).GetProperties();
 
             query = query.Where(x => x.DeletedAt == null);
 
-            foreach (var property in properties)
+            if (param.IsProperty)
             {
-                try
+                foreach (var item in param.Properties)
                 {
-                    if (param.TryGetValue(property.Name.ToLower(), out paramsValue) || param.TryGetValue(property.Name, out paramsValue))
+                    try
                     {
-                        var values = paramsValue.Split(',');
+                        var property = typeof(TModel).GetProperty(item.Key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                        var values = item.Value.Split(',');
                         if (values.Length == 1 && values[0].Contains("*"))
                         {
                             if (property.PropertyType != typeof(string))
@@ -81,18 +74,18 @@ namespace ApiLibrary.Core.Controllers
                             query = query.Filter(property.Name, values);
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e);
+                    catch (Exception e)
+                    {
+                        return BadRequest(e);
+                    }
                 }
             }
 
-            if (param.TryGetValue(sortQueryKey, out paramsValue) || param.TryGetValue(sortQueryKey.ToLower(), out paramsValue))
+            if (param.IsSort)
             {
                 try
                 {
-                    var field = paramsValue.Split(',');
+                    var field = param.Sort.Split(',');
                     query = query.Sort(field);
                 }
                 catch (Exception e)
@@ -101,16 +94,16 @@ namespace ApiLibrary.Core.Controllers
                 }
             }
 
-            if(Response != null)
+            if (Response != null)
             {
                 Response.Headers.Add("Accept-Range", acceptRange.ToString());
             }
 
-            if (param.TryGetValue(rangeQueryKey, out paramsValue) || param.TryGetValue(rangeQueryKey.ToLower(), out paramsValue))
+            if (param.IsRange)
             {
                 try
                 {
-                    var tab = paramsValue.Split('-');
+                    var tab = param.Range.Split('-');
                     var start = Convert.ToInt32(tab[0]);
                     var end = Convert.ToInt32(tab[1]);
 
@@ -149,11 +142,11 @@ namespace ApiLibrary.Core.Controllers
             }
 
             IEnumerable<object> result = null;
-            if (param.TryGetValue(fieldQueryKey, out paramsValue) || param.TryGetValue(fieldQueryKey.ToLower(), out paramsValue))
+            if (param.IsSelect)
             {
                 try
                 {
-                    var field = paramsValue.ToString().Split(',');
+                    var field = param.Fields.ToString().Split(',');
                     result = query.Field(field);
                 }
                 catch (Exception e)
@@ -173,7 +166,7 @@ namespace ApiLibrary.Core.Controllers
                 }
             }
 
-            if (param.ContainsKey(rangeQueryKey) || param.ContainsKey(rangeQueryKey.ToLower()))
+            if (param.IsRange)
             {
                 return Partial(result);
             }

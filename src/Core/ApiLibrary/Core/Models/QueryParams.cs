@@ -1,30 +1,124 @@
-﻿using System;
+﻿using ApiLibrary.Core.Attributes;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 
 namespace ApiLibrary.Core.Models
 {
-    public class QueryParams
+
+    [SortQueryKey("Sort")]
+    [FieldQueryKey("Field")]
+    [RangeQueryKey("Range")]
+    public class QueryParams : Dictionary<string, string>
     {
-        public string Range { get; set; }
 
-        public string Sort { get; set; }
+        public Dictionary<string, string> Properties
+        {
+            get
+            {
+                var rangeKey = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
+                var sortKey = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
+                var fieldKey = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
+                Dictionary<string, string> values = new Dictionary<string, string>();
+                foreach (var key in this.Keys)
+                {
+                    if ((key != rangeKey && key != rangeKey.ToLower()) && (key != sortKey && key != sortKey.ToLower()) && (key != fieldKey && key != fieldKey.ToLower()))
+                    {
+                        string value;
+                        this.TryGetValue(key, out value);
+                        values.Add(key, value);
+                    }
+                }
+                return values;
+            }
+        }
 
-        public string Fields { get; set; }
+        public string Range
+        {
+            get
+            {
+                var rangeKey = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
+                string value;
+                this.TryGetValue(rangeKey, out value);
+                if (value == null)
+                {
+                    this.TryGetValue(rangeKey.ToLower(), out value);
+                }
+                return value;
+            }
+        }
+
+        public string Sort
+        {
+            get
+            {
+                var sortKey = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
+                string value;
+                this.TryGetValue(sortKey, out value);
+                if (value == null)
+                {
+                    this.TryGetValue(sortKey.ToLower(), out value);
+                }
+                return value;
+            }
+        }
+
+        public string Fields
+        {
+            get
+            {
+                var fieldKey = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
+                string value;
+                this.TryGetValue(fieldKey, out value);
+                if (value == null)
+                {
+                    this.TryGetValue(fieldKey.ToLower(), out value);
+                }
+                return value;
+            }
+        }
+
 
         public bool IsRange
         {
-            get { return !string.IsNullOrWhiteSpace(Range); }
+            get
+            {
+                var value = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
+                return this.ContainsKey(value) || this.ContainsKey(value.ToLower());
+            }
         }
 
         public bool IsSort
         {
-            get { return !string.IsNullOrWhiteSpace(Sort); }
+            get
+            {
+                var value = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
+                return this.ContainsKey(value) || this.ContainsKey(value.ToLower());
+            }
         }
 
         public bool IsSelect
         {
-            get { return !string.IsNullOrWhiteSpace(Fields); }
+            get
+            {
+                var value = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
+                return this.ContainsKey(value) || this.ContainsKey(value.ToLower());
+            }
+        }
+
+        public bool IsProperty
+        {
+            get
+            {
+                var rangeKey = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
+                var sortKey = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
+                var fieldKey = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
+                foreach (var key in this.Keys)
+                {
+                    if ((key != rangeKey && key != rangeKey.ToLower()) && (key != sortKey && key != sortKey.ToLower()) && (key != fieldKey && key != fieldKey.ToLower()))
+                        return true;
+                }
+                return false;
+            }
         }
     }
 }

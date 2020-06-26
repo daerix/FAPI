@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ApiLibrary.Core.Exceptions;
+using ApiLibrary.Core.Models;
+using ApiLibrary.Test.Mocks;
+using ApiLibrary.Test.Mocks.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using System.Linq;
-using ApiLibrary.Test.Mocks.Models;
-using ApiLibrary.Test.Mocks;
-using ApiLibrary.Core.Exceptions;
 
 
 namespace ApiLibrary.Test
@@ -22,7 +22,7 @@ namespace ApiLibrary.Test
         {
             var controller = new BaseControllerMock(_db);
 
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { });
             var result = ((IEnumerable<ModelTest>)(actionResult.Result as ObjectResult).Value);
 
             Assert.Equal((int)System.Net.HttpStatusCode.OK, (actionResult.Result as ObjectResult).StatusCode);
@@ -34,7 +34,7 @@ namespace ApiLibrary.Test
         {
             var controller = new BaseControllerMock(_db);
 
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "String", "String1" } });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "String", "String1" } });
             var result = ((IEnumerable<ModelTest>)(actionResult.Result as ObjectResult).Value);
 
             Assert.Equal((int)System.Net.HttpStatusCode.OK, (actionResult.Result as ObjectResult).StatusCode);
@@ -46,7 +46,7 @@ namespace ApiLibrary.Test
         {
             var controller = new BaseControllerMock(_db);
 
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "String", "String*" } });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "String", "String*" } });
             var result = ((IEnumerable<ModelTest>)(actionResult.Result as ObjectResult).Value);
 
             Assert.Equal((int)System.Net.HttpStatusCode.OK, (actionResult.Result as ObjectResult).StatusCode);
@@ -57,7 +57,7 @@ namespace ApiLibrary.Test
         public async Task get_models_with_fork()
         {
             var controller = new BaseControllerMock(_db);
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "Integer", "[2,3]" } });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "Integer", "[2,3]" } });
             var result = ((IEnumerable<ModelTest>)(actionResult.Result as ObjectResult).Value);
 
             Assert.Equal((int)System.Net.HttpStatusCode.OK, (actionResult.Result as ObjectResult).StatusCode);
@@ -68,7 +68,7 @@ namespace ApiLibrary.Test
         public async Task get_models_with_sort()
         {
             var controller = new BaseControllerMock(_db);
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "Sort", "String" } });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "Sort", "String" } });
             var result = ((IEnumerable<ModelTest>)(actionResult.Result as ObjectResult).Value);
 
             Assert.Equal((int)System.Net.HttpStatusCode.OK, (actionResult.Result as ObjectResult).StatusCode);
@@ -79,7 +79,7 @@ namespace ApiLibrary.Test
         public async Task get_models_with_fields()
         {
             var controller = new BaseControllerMock(_db);
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "Field", "String,Integer" } });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "Field", "String,Integer" } });
             var result = ((IEnumerable<object>)(actionResult.Result as ObjectResult).Value);
 
             Assert.Equal((int)System.Net.HttpStatusCode.OK, (actionResult.Result as ObjectResult).StatusCode);
@@ -98,11 +98,11 @@ namespace ApiLibrary.Test
         }
 
         /*
-
         [Fact]
         public async Task get_models_with_range()
         {
             var controller = new BaseControllerMock(_db);
+           
             var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "Range", "2-3" } });
             var result = ((IEnumerable<object>)(actionResult.Result as ObjectResult).Value);
 
@@ -116,7 +116,7 @@ namespace ApiLibrary.Test
         {
             var controller = new BaseControllerMock(_db);
 
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "Range", "toto-tata" } });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "Range", "toto-tata" } });
 
             Assert.Equal((int)System.Net.HttpStatusCode.BadRequest, (actionResult.Result as ObjectResult).StatusCode);
         }
@@ -126,21 +126,42 @@ namespace ApiLibrary.Test
         public async Task get_models_with_range_throw_range_exception()
         {
             var controller = new BaseControllerMock(_db);
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "Range", "0-26" } });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "Range", "0-26" } });
 
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
             Assert.IsType<RangeException>(badRequestResult.Value);
-           
+
         }
+
+        [Fact]
+        public async Task get_models_with_filter_throw_null_reference_exception()
+        {
+            var controller = new BaseControllerMock(_db);
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "toto", "toto,tata" } });
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+            Assert.IsType<NullReferenceException>(badRequestResult.Value);
+        }
+
 
         [Fact]
         public async Task get_models_with_fork_throw_fork_exception()
         {
             var controller = new BaseControllerMock(_db);
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "String", "[toto,tata]" } });
-           
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "String", "[toto,tata]" } });
+
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
             Assert.IsType<ForkException>(badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task get_models_with_fork_throw_null_reference_exception()
+        {
+            var controller = new BaseControllerMock(_db);
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "toto", "[0,1]" } });
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+            Assert.IsType<NullReferenceException>(badRequestResult.Value);
 
         }
 
@@ -148,10 +169,20 @@ namespace ApiLibrary.Test
         public async Task get_models_with_search_throw_search_exception()
         {
             var controller = new BaseControllerMock(_db);
-            var actionResult = await controller.GetItemsAsync(new Dictionary<string, string> { { "Integer", "1*" } });
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "Integer", "1*" } });
 
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
             Assert.IsType<SearchException>(badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task get_models_with_search_throw_null_reference_exception()
+        {
+            var controller = new BaseControllerMock(_db);
+            var actionResult = await controller.GetItemsAsync(new QueryParams { { "toto", "String1" } });
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+            Assert.IsType<NullReferenceException>(badRequestResult.Value);
         }
 
         [Fact]

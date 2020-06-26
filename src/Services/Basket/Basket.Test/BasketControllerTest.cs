@@ -3,16 +3,10 @@ using Basket.API.Enums;
 using Basket.API.Models;
 using Basket.Test.Mocks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Basket.Test
 {

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ApiLibrary.Core.Attributes;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using ApiLibrary.Core.Attributes;
 
 
 namespace ApiLibrary.Core.Entities
@@ -52,7 +51,12 @@ namespace ApiLibrary.Core.Entities
 
         private void AddTracking()
         {
-            var entries =  ChangeTracker.Entries().Where(x => x.Entity is BaseEntity && (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
+            var entries = ChangeTracker.Entries().Where(x =>
+           x.Entity is BaseEntity
+           && (x.State == EntityState.Added
+           || x.State == EntityState.Modified
+           || x.State == EntityState.Deleted));
+
             foreach (var item in entries)
             {
                 switch (item.State)

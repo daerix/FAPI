@@ -36,10 +36,11 @@ namespace ApiLibrary.Core.Extensions
 
         public static Expression Constant(this MemberExpression expression, string value)
         {
-            if (expression.Type != typeof(string) && expression.Type != typeof(DateTime))
+            if (expression.Type == typeof(DateTime))
             {
-                value = value.Replace(".", ",");
+                value = DateTime.Parse(value).ToString();
             }
+
             var obj = TypeDescriptor.GetConverter(expression.Type).ConvertFromString(value);
             return Expression.Constant(obj, expression.Type);
         }
