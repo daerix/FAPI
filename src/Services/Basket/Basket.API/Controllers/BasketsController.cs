@@ -3,6 +3,7 @@ using Basket.API.Data;
 using Basket.API.Models;
 using Mailjet.Client;
 using Mailjet.Client.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
@@ -16,6 +17,7 @@ using System.Timers;
 
 namespace Basket.API.Controllers
 {
+    [Authorize]
     [ApiVersion("1")]
     public class BasketsController : BaseController<Models.Basket, int, BasketDbContext>
     {
@@ -27,10 +29,12 @@ namespace Basket.API.Controllers
             //SetTimer();
         }
 
+        [Authorize]
         public override async Task<ActionResult> PostItemAsync([FromBody] Models.Basket basket)
         {
             try
             {
+                
                 if (ModelState.IsValid || basket.User == 0)
                 {
                     basket.State = Enums.BasketStates.PENDING;
@@ -48,7 +52,7 @@ namespace Basket.API.Controllers
                 return BadRequest(e);
             }
         }
-
+        [Authorize]
         public override async Task<ActionResult> PutItemAsync([FromBody] Models.Basket basket, [FromRoute] int id)
         {
             if (id != basket.Id)
@@ -82,7 +86,7 @@ namespace Basket.API.Controllers
                 return BadRequest(ModelState);
             }
         }
-
+        [Authorize]
         public override async Task<ActionResult> DeleteItemAsync([FromRoute] int id)
         {
             var basket = await _db.Baskets.FindAsync(id);
