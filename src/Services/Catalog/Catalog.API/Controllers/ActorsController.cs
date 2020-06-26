@@ -2,6 +2,7 @@
 using Catalog.API.Data;
 using Catalog.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Catalog.API.Controllers
