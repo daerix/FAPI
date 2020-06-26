@@ -8,7 +8,7 @@
 ### Tom Ruscelli
 * Réalisation de la librairie "[Authentification.API](https://github.com/daerix/FAPI/tree/master/src/Services/Authentification/Authentification.API)"
 * Réalisation des Tests Fonctionnels "[IQueryableExtentions](https://github.com/daerix/FAPI/tree/master/src/Services/Authentification/Authentification.Test)"
-* Intégration Authentification.API dans Catalog.API et Basket.API
+* Intégration Authentification.API dans "[Catalog.API](https://github.com/daerix/FAPI/tree/master/src/Services/Catalog/Catalog.API)" et "[Basket.API](https://github.com/daerix/FAPI/tree/master/src/Services/Basket/Basket.API)"
 
 ### Maxime Abdelouahed-Robeque
 * Réalisation de la librairie "[Catalog.API](https://github.com/daerix/FAPI/tree/master/src/Services/Catalog/Catalog.API)"
