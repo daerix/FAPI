@@ -13,6 +13,6 @@ Voir [FAPI build instructions](https://github.com/daerix/FAPI/wiki/1.-Installati
 
 ## Author
 * Tom Ruscelli ([iTyom](https://github.com/iTyom))
-* Maxime Abdel-Robeque ([MaximeRA](https://github.com/MaximeRA))
+* Maxime Abdelouahed-Robeque ([MaximeRA](https://github.com/MaximeRA))
 * Ludovic Robez ([LudovicRobez](https://github.com/LudovicRobez))
 * Virgile Sassano ([daerix](https://github.com/daerix))
