@@ -3,11 +3,12 @@ using Catalog.API.Data;
 using Catalog.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using ApiLibrary.Core.Models;
 
 namespace Catalog.API.Controllers
 {
-    [Authorize]
     [ApiVersion("1")]
     public class ActorsController : BaseController<Actor, int, CatalogDbContext>
     {
@@ -15,5 +16,32 @@ namespace Catalog.API.Controllers
         {
         }
 
+        [Authorize]
+        public override Task<ActionResult> DeleteItemAsync([FromRoute] int id)
+        {
+            return base.DeleteItemAsync(id);
+        }
+
+        public override Task<ActionResult<Actor>> GetItemByIdAsync([FromRoute] int id, [FromQuery] bool deepFetch = false)
+        {
+            return base.GetItemByIdAsync(id, deepFetch);
+        }
+
+        public override Task<ActionResult<IEnumerable<Actor>>> GetItemsAsync([FromQuery] QueryParams param)
+        {
+            return base.GetItemsAsync(param);
+        }
+
+        [Authorize]
+        public override Task<ActionResult> PostItemAsync([FromBody] Actor item)
+        {
+            return base.PostItemAsync(item);
+        }
+
+        [Authorize]
+        public override Task<ActionResult> PutItemAsync([FromBody] Actor item, [FromRoute] int id)
+        {
+            return base.PutItemAsync(item, id);
+        }
     }
 }
