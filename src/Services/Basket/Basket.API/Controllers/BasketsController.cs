@@ -22,7 +22,6 @@ namespace Basket.API.Controllers
     public class BasketsController : BaseController<Models.Basket, int, BasketDbContext>
     {
         private Timer aTimer;
-        private string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJGQVBJQXV0aGVudGlmaWNhdGlvbkFjY2Vzc1Rva2VuIiwianRpIjoiOTNjMzljNzctMGJhMC00Y2YyLTgxOTYtMjIwOWU2ZjEyNWM0IiwiaWF0IjoiMjYvMDYvMjAyMCAwOTozODo1NCIsIklEIjoiMjAiLCJGaXJzdE5hbWUiOiJoaCIsIkxhc3ROYW1lIjoiaGhoIiwiTWFpbCI6ImhvcGxmYSIsImV4cCI6MTU5MzI1MDczNCwiaXNzIjoiRkFQSUF1dGhlbnRpZmljYXRpb25BUEkiLCJhdWQiOiJGQVBJQXV0aGVudGlmaWNhdGlvblBvc3RtYW5DbGllbnQifQ.gSukXwX729296DkUu9rAsHZ8BndsAFyjaGGR8YUqKSo";
 
         public BasketsController(BasketDbContext db) : base(db)
         {
@@ -34,7 +33,7 @@ namespace Basket.API.Controllers
         {
             try
             {
-                
+
                 if (ModelState.IsValid || basket.User == 0)
                 {
                     basket.State = Enums.BasketStates.PENDING;
@@ -74,8 +73,10 @@ namespace Basket.API.Controllers
                     }
                     _db.Remove(basket);
                     var token = GetToken();
-                    token = token.Replace("Bearer ", "");
-                    SendValidationMailAsync(basket, GetClaim(token, "Mail"), GetClaim(token, "LastName"), GetClaim(token, "FirstName"), price);
+                    var email = GetClaim(token, "Mail");
+                    var lastname = GetClaim(token, "LastName");
+                    var firstname = GetClaim(token, "FirstName");
+                    SendValidationMailAsync(basket, !string.IsNullOrEmpty(email) ? email : "virgilesassano@gmail.com", !string.IsNullOrEmpty(lastname) ? lastname : "Mouloud", !string.IsNullOrEmpty(firstname) ? firstname : "Mouloud", price);
                 }
 
                 await _db.SaveChangesAsync();
@@ -128,15 +129,23 @@ namespace Basket.API.Controllers
         public string GetClaim(string token, string claimType)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+            if (!string.IsNullOrEmpty(token))
+            {
+                var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
 
-            var stringClaimValue = securityToken.Claims.First(claim => claim.Type == claimType).Value;
-            return stringClaimValue;
+                var stringClaimValue = securityToken.Claims.First(claim => claim.Type == claimType).Value;
+                return stringClaimValue;
+            }
+            return null;
         }
 
         public string GetToken()
         {
-            var token = (string)Request.Headers[HeaderNames.Authorization] as string;
+            var token = "";
+            if (Request != null)
+            {
+                token = (string)Request.Headers[HeaderNames.Authorization] as string;
+            }
             token = token.Replace("Bearer ", "");
             return token;
         }
