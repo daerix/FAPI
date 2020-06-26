@@ -11,6 +11,9 @@ Voir [FAPI Documentation](https://github.com/daerix/FAPI/wiki)
 ## Comment installer et démarrer le projet?
 Voir [FAPI build instructions](https://github.com/daerix/FAPI/wiki/1.-Installation)
 
+## Répartition des tâches
+Voir la [Répartition des tâches](https://github.com/daerix/FAPI/blob/master/AUTHORS.md)
+
 ## Author
 * Tom Ruscelli ([iTyom](https://github.com/iTyom))
 * Maxime Abdelouahed-Robeque ([MaximeRA](https://github.com/MaximeRA))
