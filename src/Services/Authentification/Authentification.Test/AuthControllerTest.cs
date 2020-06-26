@@ -1,9 +1,15 @@
 using Authentification.API.Controllers;
 using Authentification.API.Models;
 using Authentification.Test.Mocks;
+using Authentification.Test.Mocks.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -13,12 +19,21 @@ namespace Authentification.Test
     public class AuthControllerTest
     {
 
-        private AuthController controller;
+        private AuthControllerMock controller;
         public IConfiguration _configuration;
 
-        public AuthControllerTest(IConfiguration config)
+        public AuthControllerTest()
         {
-            _configuration = config;
+            var myConfiguration = new Dictionary<string, string> {
+                {"Jwt:Key", "secretKeyButNeedToBeStronger"},
+                {"Jwt:Issuer", "FAPIAuthentificationAPI"},
+                {"Jwt:Audience", "FAPIAuthentificationPostmanClient"},
+                {"Jwt:Subject", "FAPIAuthentificationAccessToken"}
+            };
+
+            _configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(myConfiguration)
+            .Build();
         }
 
         [Fact]
@@ -26,7 +41,7 @@ namespace Authentification.Test
         {
             using (var context = await MockDbContext.GetDbContext())
             {
-                controller = new AuthController(_configuration, context);
+                controller = new AuthControllerMock(_configuration, context);
                 var userMock = new Authentification.API.Models.User
                 {
                     Mail = "MailTest@icloud.com"
@@ -41,7 +56,7 @@ namespace Authentification.Test
         {
             using (var context = await MockDbContext.GetDbContext())
             {
-                controller = new AuthController(_configuration, context);
+                controller = new AuthControllerMock(_configuration, context);
                 var userMock = new Authentification.API.Models.User
                 {
                     Password = "Password"
@@ -56,7 +71,7 @@ namespace Authentification.Test
         {
             using (var context = await MockDbContext.GetDbContext())
             {
-                controller = new AuthController(_configuration, context);
+                controller = new AuthControllerMock(_configuration, context);
                 var userMock = new Authentification.API.Models.User
                 {
                     Mail = "MailTest@icloud.com",
@@ -72,14 +87,14 @@ namespace Authentification.Test
         {
             using (var context = await MockDbContext.GetDbContext())
             {
-                controller = new AuthController(_configuration, context);
+                controller = new AuthControllerMock(_configuration, context);
                 var userMock = new Authentification.API.Models.User
                 {
                     Mail = "new@icloud.com",
-                    Password = "Password123"
+                    Password = "Password123", 
                 };
                 var actionResult = await controller.Logon(userMock);
-                Assert.IsType<BadRequestObjectResult>(actionResult);
+                Assert.IsType<OkObjectResult>(actionResult);
             }
         }
     }

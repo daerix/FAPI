@@ -17,13 +17,17 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Authentification.API;
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace Authentification.API.Controllers
 {
     [ApiVersion("1")]
     public class AuthController : BaseController<User, int, UserDbContext>
     {
-        public IConfiguration _configuration;
+
+        private readonly IConfiguration _configuration;
         public AuthController(IConfiguration config, UserDbContext context) : base(context)
         {
             _configuration = config;
@@ -74,11 +78,11 @@ namespace Authentification.API.Controllers
                         new Claim("Mail", model.Mail)
                         };
 
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Subject"]));
 
                         var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+                        var token = new JwtSecurityToken(_configuration["Jwt:Subject"], _configuration["Jwt:Subject"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
                         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
                         return Ok(new JwtSecurityTokenHandler().WriteToken(token));
                     }
@@ -116,8 +120,8 @@ namespace Authentification.API.Controllers
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                         new Claim("ID", userCreated.Id.ToString()),
-                        new Claim("FirstName", userCreated.FirstName),
-                        new Claim("LastName", userCreated.LastName),
+                        new Claim("FirstName", string.IsNullOrWhiteSpace(userCreated.FirstName) ? "" : userCreated.FirstName),
+                        new Claim("LastName", string.IsNullOrWhiteSpace(userCreated.LastName) ? "" : userCreated.LastName),
                         new Claim("Mail", userCreated.Mail)
                         };
 
