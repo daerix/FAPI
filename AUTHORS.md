@@ -1,6 +1,6 @@
 ## Author
 * Tom Ruscelli ([iTyom](https://github.com/iTyom))
-* Maxime Abdel-Robeque ([MaximeRA](https://github.com/MaximeRA))
+* Maxime Abdelouahed-Robeque ([MaximeRA](https://github.com/MaximeRA))
 * Ludovic Robez ([LudovicRobez](https://github.com/LudovicRobez))
 * Virgile Sassano ([daerix](https://github.com/daerix))
 
@@ -10,9 +10,12 @@
 * Réalisation des Tests Fonctionnels "[IQueryableExtentions](https://github.com/daerix/FAPI/tree/master/src/Services/Authentification/Authentification.Test)"
 * Intégration Authentification.API dans Catalog.API et Basket.API
 
-### Maxime Abdel-Robeque
-* Resp 1
-* Resp 2
+### Maxime Abdelouahed-Robeque
+* Réalisation de la librairie "[Catalog.API](https://github.com/daerix/FAPI/tree/master/src/Services/Catalog/Catalog.API)"
+* Réalisation des Test unitaires sur la classe "[DbContext](https://github.com/daerix/FAPI/blob/master/src/Core/ApiLibrary.Test/BaseDbContextTest.cs)"
+* Peer Programming sur les Tests Unitaires de "[Api.Core](https://github.com/daerix/FAPI/blob/master/src/Core/ApiLibrary.Test)"
+* Correction de Bugs dans "[ApiLibrary](https://github.com/daerix/FAPI/tree/master/src/Core/ApiLibrary)"
+* Création du diaporama
 
 ### Ludovic Robez
 * Réalisation de la librairie "[ApiLibrary](https://github.com/daerix/FAPI/tree/master/src/Core/ApiLibrary)"
