@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: authentification
-          image: fapiimages.azurecr.io/authentification-api-image:52
+          image: fapiimages.azurecr.io/authentification-api-image:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80

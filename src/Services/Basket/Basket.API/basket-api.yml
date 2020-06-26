@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: basket
-          image: fapiimages.azurecr.io/basket-api-image:52
+          image: fapiimages.azurecr.io/basket-api-image:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
