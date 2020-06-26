@@ -82,8 +82,11 @@ namespace ApiLibrary.Core.Models
         {
             get
             {
-                var value = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
-                return this.ContainsKey(value) || this.ContainsKey(value.ToLower());
+                if (Range is null)
+                {
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -91,8 +94,11 @@ namespace ApiLibrary.Core.Models
         {
             get
             {
-                var value = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
-                return this.ContainsKey(value) || this.ContainsKey(value.ToLower());
+                if (Sort is null)
+                {
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -100,8 +106,11 @@ namespace ApiLibrary.Core.Models
         {
             get
             {
-                var value = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
-                return this.ContainsKey(value) || this.ContainsKey(value.ToLower());
+                if (Fields is null)
+                {
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -109,13 +118,9 @@ namespace ApiLibrary.Core.Models
         {
             get
             {
-                var rangeKey = this.GetType().GetCustomAttribute<RangeQueryKeyAttribute>().RangeQueryKey;
-                var sortKey = this.GetType().GetCustomAttribute<SortQueryKeyAttribute>().SortQueryKey;
-                var fieldKey = this.GetType().GetCustomAttribute<FieldQueryKeyAttribute>().FieldQueryKey;
-                foreach (var key in this.Keys)
+                if (Properties.Count > 0)
                 {
-                    if ((key != rangeKey && key != rangeKey.ToLower()) && (key != sortKey && key != sortKey.ToLower()) && (key != fieldKey && key != fieldKey.ToLower()))
-                        return true;
+                    return true;
                 }
                 return false;
             }
