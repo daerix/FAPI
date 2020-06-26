@@ -6,8 +6,9 @@
 
 ## Responsabilité
 ### Tom Ruscelli
-* Resp 1
-* Resp 2
+* Réalisation de la librairie "[Authentification.API](https://github.com/daerix/FAPI/tree/master/src/Services/Authentification/Authentification.API)"
+* Réalisation des Tests Fonctionnels "[IQueryableExtentions](https://github.com/daerix/FAPI/tree/master/src/Services/Authentification/Authentification.Test)"
+* Intégration Authentification.API dans Catalog.API et Basket.API
 
 ### Maxime Abdel-Robeque
 * Resp 1
